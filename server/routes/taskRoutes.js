@@ -1,5 +1,5 @@
 import express from 'express';
-import Task from '../models/Task.js';
+import Task from "../models/task.js";
 import User from '../models/User.js';
 import { authenticateUser } from '../middleware/auth.js';
 
@@ -49,6 +49,37 @@ router.get('/', authenticateUser, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// Delete a task
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedTask = await Task.findByIdAndDelete(req.params.id);
+    if (!deletedTask) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.json({ message: 'Task deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
+// Update a task
+router.patch('/:id', async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (req.body.title) {
+      task.title = req.body.title;
+    }
+    if (req.body.description) {
+      task.description = req.body.description;
+    }
+    if (req.body.isCompleted !== undefined) {
+      task.isCompleted = req.body.isCompleted;
+    }
+    const updatedTask = await task.save();
+    res.json(updatedTask);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 export default router;
 

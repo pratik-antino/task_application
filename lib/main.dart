@@ -6,9 +6,9 @@ import 'package:task_application/cubits/calendar_cubit.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/cubits/meeting_cubit.dart';
 import 'package:task_application/modules/notification/cubits/notification_cubit.dart';
-import 'package:task_application/cubits/task_cubit.dart';
+import 'package:task_application/modules/task/cubits/task_cubit.dart';
 import 'package:task_application/modules/auth/cubits/user_cubit.dart';
-import 'package:task_application/screens/login_screen.dart';
+import 'package:task_application/modules/auth/screens/login_screen.dart';
 
 void main() {
   runApp(MyApp());

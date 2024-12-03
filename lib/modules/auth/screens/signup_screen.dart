@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../modules/auth/cubits/auth_cubit.dart';
-import 'task_list_screen.dart';
+import '../cubits/auth_cubit.dart';
+import '../../task/screens/task_list_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   @override

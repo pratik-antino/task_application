@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../modules/events/cubits/event_cubit.dart';
-import '../modules/auth/cubits/auth_cubit.dart';
-import '../cubits/meeting_cubit.dart';
-import '../cubits/audio_command_cubit.dart';
-import '../models/event.dart';
+import '../cubits/event_cubit.dart';
+import '../../auth/cubits/auth_cubit.dart';
+import '../../../cubits/meeting_cubit.dart';
+import '../../../cubits/audio_command_cubit.dart';
+import '../../../models/event.dart';
 
 class ScheduleEventScreen extends StatefulWidget {
   @override

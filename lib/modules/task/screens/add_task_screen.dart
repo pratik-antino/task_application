@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../cubits/task_cubit.dart';
-import '../modules/auth/cubits/auth_cubit.dart';
-import '../modules/auth/cubits/user_cubit.dart';
-import '../modules/auth/cubits/user_state.dart';
-import '../models/task.dart';
-import '../models/user.dart';
+import '../../auth/cubits/auth_cubit.dart';
+import '../../auth/cubits/user_cubit.dart';
+import '../../auth/cubits/user_state.dart';
+import '../../../models/task.dart';
+import '../../../models/user.dart';
 
 class AddTaskScreen extends StatefulWidget {
   @override

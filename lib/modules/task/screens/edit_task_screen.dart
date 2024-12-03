@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
-import 'package:task_application/cubits/task_cubit.dart';
+import 'package:task_application/modules/task/cubits/task_cubit.dart';
 import 'package:task_application/models/task.dart';
 
 class EditTaskScreen extends StatefulWidget {

@@ -10,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
     checkAuthStatus();
   }
 
-  final String baseUrl = 'http://your-backend-url/api'; // Replace with your actual backend URL
+  final String baseUrl = 'http://10.0.2.2:5000/api'; // Replace with your actual backend URL
 
   // Check if the user is authenticated
   Future<void> checkAuthStatus() async {

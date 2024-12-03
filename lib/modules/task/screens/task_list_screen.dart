@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_application/screens/home_screen.dart';
-import '../modules/auth/cubits/auth_cubit.dart';
+import 'package:task_application/modules/task/screens/add_task_screen.dart';
+import 'package:task_application/modules/home/screen/home_screen.dart';
+import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
-import '../models/task.dart';
-import 'login_screen.dart';
+import '../../../models/task.dart';
+import '../../auth/screens/login_screen.dart';
 
 class TaskListScreen extends StatelessWidget {
+  late String token;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
         if (authState is AuthAuthenticated) {
+          token = authState.token;
           return Scaffold(
             appBar: AppBar(
               title: Text('Tasks'),
@@ -33,7 +36,8 @@ class TaskListScreen extends StatelessWidget {
                   context.read<TaskCubit>().fetchTasks(authState.token);
                   return Center(child: CircularProgressIndicator());
                 } else if (taskState is TaskLoading) {
-                  return Center(child: Center(child: CircularProgressIndicator()));
+                  return Center(
+                      child: Center(child: CircularProgressIndicator()));
                 } else if (taskState is TaskLoaded) {
                   return _buildTaskList(taskState.tasks);
                 } else if (taskState is TaskError) {
@@ -45,7 +49,7 @@ class TaskListScreen extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
                 await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => AddTaskScreen()),
                 );
                 context.read<TaskCubit>().fetchTasks(authState.token);
               },
@@ -64,14 +68,26 @@ class TaskListScreen extends StatelessWidget {
       itemCount: tasks.length,
       itemBuilder: (context, index) {
         final task = tasks[index];
-        return ListTile(
-          title: Text(task.title),
-          subtitle: Text(task.description),
-          trailing: Text(task.priority),
-          onTap: () {
-        
-            // Navigate to task details or edit screen
+        return Dismissible(
+          key: Key(task.id),
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(right: 20.0),
+            child: Icon(Icons.delete, color: Colors.white),
+          ),
+          direction: DismissDirection.endToStart,
+          onDismissed: (direction) {
+            context
+                .read<TaskCubit>()
+                .deleteTask(task.id, token);
           },
+          child: ListTile(
+            title: Text(task.title),
+            subtitle: Text(task.description),
+            trailing: Text(task.priority),
+            onTap: () {},
+          ),
         );
       },
     );
