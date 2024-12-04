@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../modules/notification/cubits/notification_cubit.dart';
-import '../modules/auth/cubits/auth_cubit.dart';
+import 'cubits/notification_cubit.dart';
+import '../auth/cubits/auth_cubit.dart';
 
 class NotificationScreen extends StatelessWidget {
   @override

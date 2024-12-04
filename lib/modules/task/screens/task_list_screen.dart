@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/task/screens/add_task_screen.dart';
 import 'package:task_application/modules/home/screen/home_screen.dart';
+import 'package:task_application/modules/task/screens/edit_task_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
 import '../../../models/task.dart';
@@ -78,18 +79,39 @@ class TaskListScreen extends StatelessWidget {
           ),
           direction: DismissDirection.endToStart,
           onDismissed: (direction) {
-            context
-                .read<TaskCubit>()
-                .deleteTask(task.id, token);
+            context.read<TaskCubit>().deleteTask(task.id, token);
           },
           child: ListTile(
             title: Text(task.title),
             subtitle: Text(task.description),
             trailing: Text(task.priority),
-            onTap: () {},
+            onTap: () => _addEditTask(context, task),
           ),
         );
       },
     );
+  }
+
+  void _addEditTask(BuildContext context, Task task) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditTaskScreen(
+          task: task,
+        ),
+      ),
+    );
+  }
+
+  int _priorityValue(String priority) {
+    switch (priority) {
+      case 'High':
+        return 3;
+      case 'Medium':
+        return 2;
+      case 'Low':
+        return 1;
+      default:
+        return 0;
+    }
   }
 }

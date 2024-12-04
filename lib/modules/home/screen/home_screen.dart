@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../task/screens/task_list_screen.dart';
 import '../../events/screens/schedule_event_screen.dart';
-import '../../../screens/calendar_screen.dart';
+import '../../events/calendar_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
