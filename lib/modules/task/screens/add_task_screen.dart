@@ -140,7 +140,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       onChanged: (value) => setState(() => _assignedTo = value),
                     );
                   } else if (state is UserLoading) {
-                    return CircularProgressIndicator();
+                    return const Center(child: SizedBox(child: CircularProgressIndicator()));
                   } else if (state is UserError) {
                     return Text('Error: ${state.message}');
                   }

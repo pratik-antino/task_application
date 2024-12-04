@@ -100,7 +100,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     });
                   }
                 },
-                child: Text('Select Due Date: ${_dueDate?.toIso8601String() ?? ''}'),
+                child: Text(
+                    'Select Due Date: ${_dueDate?.toIso8601String() ?? ''}'),
+              ),
+              SizedBox(
+                height: 60,
               ),
               ElevatedButton(
                 onPressed: _submitForm,
@@ -127,11 +131,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           dueDate: _dueDate,
           isCompleted: _status == 'Done',
         );
-
         context.read<TaskCubit>().updateTask(updatedTask, authState.token);
         Navigator.of(context).pop();
       }
     }
   }
 }
-

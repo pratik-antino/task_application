@@ -30,6 +30,7 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final event = Event(
+        createdBy: '',
         id: '',
         title: _title,
         description: _description,

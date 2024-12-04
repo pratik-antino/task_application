@@ -1,174 +1,121 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../auth/cubits/auth_cubit.dart';
-import '../../cubits/calendar_cubit.dart';
-import 'cubits/event_cubit.dart';
-import '../../models/event.dart';
-import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:task_application/models/event.dart';
+import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
+import 'package:task_application/modules/events/add_edit_event_screen.dart';
+import 'package:task_application/modules/events/cubits/event_cubit.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../auth/cubits/auth_cubit.dart';
-import 'cubits/event_cubit.dart';
-import '../../cubits/calendar_cubit.dart';
-
-class CalendarScreen extends StatelessWidget {
+class CalendarScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, authState) {
-        // Ensure the token is available in AuthAuthenticated state
-        if (authState is AuthAuthenticated) {
-          final token = authState.token;
-
-          return BlocBuilder<EventCubit, EventState>(
-            builder: (context, eventState) {
-              if (eventState is EventInitial) {
-                context.read<EventCubit>().fetchEvents(token);
-                return Center(child: CircularProgressIndicator());
-              } else if (eventState is EventLoading) {
-                return Center(child: CircularProgressIndicator());
-              } else if (eventState is EventLoaded) {
-                return BlocProvider(
-                  create: (context) => CalendarCubit(),
-                  child: CalendarView(events: eventState.events),
-                );
-              } else if (eventState is EventError) {
-                return Center(child: Text(eventState.message));
-              } else {
-                return Center(child: Text('Unknown state'));
-              }
-            },
-          );
-        } else {
-          // If not authenticated, show a message or navigate to login
-          return Center(
-            child: Text('Please log in to view the calendar.'),
-          );
-        }
-      },
-    );
-  }
+  _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-class CalendarView extends StatelessWidget {
-  final List<Event> events;
+class _CalendarScreenState extends State<CalendarScreen> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
-  const CalendarView({required this.events});
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthCubit>().state;
+    if (authState is AuthAuthenticated) {
+      context.read<EventCubit>().fetchEvents(authState.token);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarCubit, CalendarState>(
-      builder: (context, state) {
-        if (state is CalendarDayView) {
-          return _buildDayView(context, state);
-        } else if (state is CalendarWeekView) {
-          return _buildWeekView(context, state);
-        } else if (state is CalendarMonthView) {
-          return _buildMonthView(context, state);
-        } else {
-          // Default to month view
-          context.read<CalendarCubit>().viewMonth(DateTime.now(), events);
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-
-  Widget _buildDayView(BuildContext context, CalendarDayView state) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Day View: ${DateFormat('yyyy-MM-dd').format(state.day)}'),
-      ),
-      body: ListView.builder(
-        itemCount: state.events.length,
-        itemBuilder: (context, index) {
-          final event = state.events[index];
-          return ListTile(
-            title: Text(event.title),
-            subtitle: Text(
-              '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
-            ),
-          );
+      appBar: AppBar(title: Text('Calendar')),
+      body: BlocConsumer<EventCubit, EventState>(
+        listener: (context, state) {
+          if (state is EventError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
         },
-      ),
-    );
-  }
-
-  Widget _buildWeekView(BuildContext context, CalendarWeekView state) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Week View: ${DateFormat('yyyy-MM-dd').format(state.startOfWeek)}'),
-      ),
-      body: ListView.builder(
-        itemCount: 7,
-        itemBuilder: (context, index) {
-          final day = state.startOfWeek.add(Duration(days: index));
-          final dayEvents = state.events
-              .where((event) =>
-                  event.startTime.year == day.year &&
-                  event.startTime.month == day.month &&
-                  event.startTime.day == day.day)
-              .toList();
-          return ExpansionTile(
-            title: Text(DateFormat('E, MMM d').format(day)),
-            children: dayEvents.map((event) {
-              return ListTile(
-                title: Text(event.title),
-                subtitle: Text(
-                  '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
+        builder: (context, state) {
+          if (state is EventInitial || state is EventLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is EventLoaded) {
+            return Column(
+              children: [
+                TableCalendar(
+                  firstDay: DateTime.utc(2010, 10, 16),
+                  lastDay: DateTime.utc(2030, 3, 14),
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                  eventLoader: (day) {
+                    return state.events.where((event) => isSameDay(event.startTime, day)).toList();
+                  },
                 ),
-              );
-            }).toList(),
-          );
+                Expanded(
+                  child: _buildEventList(state.events),
+                ),
+              ],
+            );
+          }  else {
+            return Center(child: Text('An error occurred'));
+          }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _addEvent(context),
       ),
     );
   }
 
-  Widget _buildMonthView(BuildContext context, CalendarMonthView state) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Month View: ${DateFormat('MMMM yyyy').format(state.month)}'),
-      ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          childAspectRatio: 1,
-        ),
-        itemCount: DateTime(state.month.year, state.month.month + 1, 0).day,
-        itemBuilder: (context, index) {
-          final day = DateTime(state.month.year, state.month.month, index + 1);
-          final dayEvents = state.events
-              .where((event) =>
-                  event.startTime.year == day.year &&
-                  event.startTime.month == day.month &&
-                  event.startTime.day == day.day)
-              .toList();
-          return InkWell(
-            onTap: () => context.read<CalendarCubit>().viewDay(day, events),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('${index + 1}'),
-                  if (dayEvents.isNotEmpty)
-                    const SizedBox(
-                      height: 8,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        radius: 4,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+  Widget _buildEventList(List<Event> events) {
+    final eventsOnSelectedDay = events.where((event) => isSameDay(event.startTime, _selectedDay)).toList();
+
+    if (eventsOnSelectedDay.isEmpty) {
+      return Center(child: Text('No events on this day.'));
+    }
+
+    return ListView.builder(
+      itemCount: eventsOnSelectedDay.length,
+      itemBuilder: (context, index) {
+        final event = eventsOnSelectedDay[index];
+        return ListTile(
+          title: Text(event.title),
+          subtitle: Text('${event.startTime.toString()} - ${event.endTime.toString()}'),
+          onTap: () => _editEvent(context, event),
+        );
+      },
+    );
+  }
+
+  void _addEvent(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => AddEditEventScreen(selectedDate: _selectedDay ?? DateTime.now())),
+    );
+  }
+
+  void _editEvent(BuildContext context, Event event) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => AddEditEventScreen(event: event)),
     );
   }
 }
+

@@ -18,11 +18,12 @@ class Event {
     required this.participants,
     required this.ownerId,
     required this.sharedWith,
-    this.meetingLink,
+    this.meetingLink, required createdBy,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
+      createdBy: '',
       id: json['id'],
       title: json['title'],
       description: json['description'],
@@ -61,6 +62,7 @@ class Event {
     String? meetingLink,
   }) {
     return Event(
+      createdBy: '',
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,

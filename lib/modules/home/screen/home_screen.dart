@@ -31,9 +31,6 @@ class HomeScreen extends StatelessWidget {
           _buildGridItem(context, 'Meeting Scheduling', Icons.event, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScheduleEventScreen()));
           }),
-          _buildGridItem(context, 'Calendar', Icons.calendar_today, () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarScreen()));
-          }),
         ],
       ),
     );

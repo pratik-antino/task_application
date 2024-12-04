@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/home/screen/home_screen.dart';
 import '../cubits/auth_cubit.dart';
-import '../../task/screens/task_list_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,49 +40,53 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Email'),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty || !value.contains('@')) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _email = value!,
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Email'),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty || !value.contains('@')) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _email = value!,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Password'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty || value.length < 6) {
+                            return 'Password must be at least 6 characters long';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _password = value!,
+                      ),
+                      SizedBox(height: 20),
+                      if (state is AuthLoading)
+                        CircularProgressIndicator()
+                      else
+                        ElevatedButton(
+                          child: Text('Login'),
+                          onPressed: _submit,
+                        ),
+                      TextButton(
+                        child: Text('Don\'t have an account? Sign up'),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) => SignupScreen()),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 6) {
-                        return 'Password must be at least 6 characters long';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _password = value!,
-                  ),
-                  SizedBox(height: 20),
-                  if (state is AuthLoading)
-                    CircularProgressIndicator()
-                  else
-                    ElevatedButton(
-                      child: Text('Login'),
-                      onPressed: _submit,
-                    ),
-                  TextButton(
-                    child: Text('Don\'t have an account? Sign up'),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (ctx) => SignupScreen()),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           );

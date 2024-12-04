@@ -56,7 +56,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> updateTask(Task task, String token) async {
     try {
-      final response = await http.put(
+      final response = await http.patch(
         Uri.parse('$baseUrl/tasks/${task.id}'),
         headers: {
           'Content-Type': 'application/json',

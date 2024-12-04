@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/task/screens/add_task_screen.dart';
-import 'package:task_application/modules/home/screen/home_screen.dart';
 import 'package:task_application/modules/task/screens/edit_task_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
@@ -37,7 +36,7 @@ class TaskListScreen extends StatelessWidget {
                   context.read<TaskCubit>().fetchTasks(authState.token);
                   return Center(child: CircularProgressIndicator());
                 } else if (taskState is TaskLoading) {
-                  return Center(
+                  return const Center(
                       child: Center(child: CircularProgressIndicator()));
                 } else if (taskState is TaskLoaded) {
                   return _buildTaskList(taskState.tasks);
