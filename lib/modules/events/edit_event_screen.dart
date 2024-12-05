@@ -8,7 +8,7 @@ class AddEditEventScreen extends StatefulWidget {
   final Event event;
 
   // Pass the existing event to edit
-  AddEditEventScreen({required this.event});
+  const AddEditEventScreen({super.key, required this.event});
 
   @override
   _AddEditEventScreenState createState() => _AddEditEventScreenState();
@@ -19,7 +19,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
   String _title = '';
   String _description = '';
   DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
         Navigator.of(context).pop(); // Close the screen after submitting
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Authentication error. Please log in again.')),
+          const SnackBar(content: Text('Authentication error. Please log in again.')),
         );
       }
     }
@@ -63,17 +63,17 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Event'),
+        title: const Text('Edit Event'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: <Widget>[
               TextFormField(
                 initialValue: _title,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
@@ -84,20 +84,20 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               ),
               TextFormField(
                 initialValue: _description,
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 onSaved: (value) => _description = value!,
               ),
               ListTile(
-                title: Text('Start Time'),
+                title: const Text('Start Time'),
                 subtitle: Text(_startTime.toString()),
-                trailing: Icon(Icons.access_time),
+                trailing: const Icon(Icons.access_time),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: _startTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
                   if (pickedDate != null) {
                     final pickedTime = await showTimePicker(
@@ -119,15 +119,15 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 },
               ),
               ListTile(
-                title: Text('End Time'),
+                title: const Text('End Time'),
                 subtitle: Text(_endTime.toString()),
-                trailing: Icon(Icons.access_time),
+                trailing: const Icon(Icons.access_time),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: _endTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
                   if (pickedDate != null) {
                     final pickedTime = await showTimePicker(
@@ -148,10 +148,10 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                   }
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                child: Text('Update Event'),
                 onPressed: _submitForm,
+                child: Text('Update Event'),
               ),
             ],
           ),

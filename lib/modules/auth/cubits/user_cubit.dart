@@ -25,13 +25,13 @@ class UserCubit extends Cubit<UserState> {
         final List<User> loadedUsers = [];
         final extractedData = json.decode(response.body) as List<dynamic>;
         
-        extractedData.forEach((userData) {
+        for (var userData in extractedData) {
           loadedUsers.add(User.fromJson(userData));
-        });
+        }
 
         emit(UserLoaded(loadedUsers));
       } else {
-        emit(UserError('Failed to load users'));
+        emit(const UserError('Failed to load users'));
       }
     } catch (error) {
       emit(UserError(error.toString()));

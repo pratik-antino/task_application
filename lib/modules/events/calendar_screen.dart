@@ -8,6 +8,8 @@ import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/modules/events/edit_event_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
+  const CalendarScreen({super.key});
+
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
 }
@@ -29,7 +31,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calendar')),
+      appBar: AppBar(title: const Text('Calendar')),
       body: BlocConsumer<EventCubit, EventState>(
         listener: (context, state) {
           if (state is EventError) {
@@ -78,12 +80,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ],
             );
           } else {
-            return Center(child: Text('An error occurred'));
+            return const Center(child: Text('An error occurred'));
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _addEvent(context),
       ),
     );
@@ -95,7 +97,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         .toList();
 
     if (eventsOnSelectedDay.isEmpty) {
-      return Center(child: Text('No events on this day.'));
+      return const Center(child: Text('No events on this day.'));
     }
 
     return Column(

@@ -9,6 +9,8 @@ import '../../auth/screens/login_screen.dart';
 
 class TaskListScreen extends StatelessWidget {
   late String token;
+
+  TaskListScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
@@ -17,10 +19,10 @@ class TaskListScreen extends StatelessWidget {
           token = authState.token;
           return Scaffold(
             appBar: AppBar(
-              title: Text('Tasks'),
+              title: const Text('Tasks'),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.exit_to_app),
+                  icon: const Icon(Icons.exit_to_app),
                   onPressed: () {
                     context.read<AuthCubit>().logout();
                     Navigator.of(context).pushReplacement(
@@ -34,7 +36,7 @@ class TaskListScreen extends StatelessWidget {
               builder: (context, taskState) {
                 if (taskState is TaskInitial) {
                   context.read<TaskCubit>().fetchTasks(authState.token);
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (taskState is TaskLoading) {
                   return const Center(
                       child: Center(child: CircularProgressIndicator()));
@@ -43,7 +45,7 @@ class TaskListScreen extends StatelessWidget {
                 } else if (taskState is TaskError) {
                   return Center(child: Text('Error: ${taskState.message}'));
                 }
-                return Center(child: Text('Unknown state'));
+                return const Center(child: Text('Unknown state'));
               },
             ),
             floatingActionButton: FloatingActionButton(
@@ -53,7 +55,7 @@ class TaskListScreen extends StatelessWidget {
                 );
                 context.read<TaskCubit>().fetchTasks(authState.token);
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           );
         } else {
@@ -73,8 +75,8 @@ class TaskListScreen extends StatelessWidget {
           background: Container(
             color: Colors.red,
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.delete, color: Colors.white),
+            padding: const EdgeInsets.only(right: 20.0),
+            child: const Icon(Icons.delete, color: Colors.white),
           ),
           direction: DismissDirection.endToStart,
           onDismissed: (direction) {

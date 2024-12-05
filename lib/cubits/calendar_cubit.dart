@@ -15,10 +15,10 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   void viewWeek(DateTime startOfWeek, List<Event> events) {
-    final endOfWeek = startOfWeek.add(Duration(days: 6));
+    final endOfWeek = startOfWeek.add(const Duration(days: 6));
     final weekEvents = events.where((event) =>
-        event.startTime.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
-        event.startTime.isBefore(endOfWeek.add(Duration(days: 1)))).toList();
+        event.startTime.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
+        event.startTime.isBefore(endOfWeek.add(const Duration(days: 1)))).toList();
     emit(CalendarWeekView(startOfWeek, weekEvents));
   }
 
@@ -26,8 +26,8 @@ class CalendarCubit extends Cubit<CalendarState> {
     final startOfMonth = DateTime(month.year, month.month, 1);
     final endOfMonth = DateTime(month.year, month.month + 1, 0);
     final monthEvents = events.where((event) =>
-        event.startTime.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
-        event.startTime.isBefore(endOfMonth.add(Duration(days: 1)))).toList();
+        event.startTime.isAfter(startOfMonth.subtract(const Duration(days: 1))) &&
+        event.startTime.isBefore(endOfMonth.add(const Duration(days: 1)))).toList();
     emit(CalendarMonthView(month, monthEvents));
   }
 }

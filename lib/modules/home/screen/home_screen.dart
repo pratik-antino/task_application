@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_application/modules/meetings/meeting_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../task/screens/task_list_screen.dart';
 import '../../events/screens/schedule_event_screen.dart';
 import '../../events/calendar_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Management App'),
+        title: const Text('Task Management App'),
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () {
               context.read<AuthCubit>().logout();
               Navigator.of(context).pushReplacementNamed('/login');
@@ -23,7 +26,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
           _buildGridItem(context, 'Task Management', Icons.assignment, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_) => TaskListScreen()));
@@ -31,6 +34,11 @@ class HomeScreen extends StatelessWidget {
           _buildGridItem(context, 'Event Scheduling', Icons.event, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarScreen()));
           }),
+          
+          _buildGridItem(context, 'Meeting Scheduling', Icons.event, () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => GoogleMeetScreen()));
+          }),
+          
         ],
       ),
     );
@@ -45,7 +53,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 48.0),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(title, textAlign: TextAlign.center),
           ],
         ),

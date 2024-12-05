@@ -5,6 +5,8 @@ import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import '../../../models/event.dart';
 
 class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key});
+
   @override
   _AddEventScreenState createState() => _AddEventScreenState();
 }
@@ -14,7 +16,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String _title = '';
   String _description = '';
   DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(Duration(hours: 1));
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
   List<String> _participants = [];
 
   void _submitForm() {
@@ -38,7 +40,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Authentication error. Please log in again.')),
+          const SnackBar(content: Text('Authentication error. Please log in again.')),
         );
       }
     }
@@ -48,44 +50,44 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Event'),
+        title: const Text('Add Event'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) => value == null || value.isEmpty ? 'Please enter a title' : null,
                 onSaved: (value) => _title = value!,
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 onSaved: (value) => _description = value!,
               ),
               ListTile(
-                title: Text('Start Time'),
+                title: const Text('Start Time'),
                 subtitle: Text(_startTime.toString()),
-                trailing: Icon(Icons.calendar_today),
+                trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDateTime(context, isStartTime: true),
               ),
               ListTile(
-                title: Text('End Time'),
+                title: const Text('End Time'),
                 subtitle: Text(_endTime.toString()),
-                trailing: Icon(Icons.calendar_today),
+                trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDateTime(context, isStartTime: false),
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Participants (comma-separated emails)'),
+                decoration: const InputDecoration(labelText: 'Participants (comma-separated emails)'),
                 onSaved: (value) => _participants = value!.split(',').map((e) => e.trim()).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Add Event'),
+                child: const Text('Add Event'),
               ),
             ],
           ),
@@ -96,37 +98,46 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Future<void> _selectDateTime(BuildContext context, {required bool isStartTime}) async {
     final currentDate = isStartTime ? _startTime : _endTime;
+
+    // Select the date
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: currentDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (selectedDate != null) {
+      // Select the time
       final selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(currentDate),
       );
 
       if (selectedTime != null) {
+        // Combine the selected date and time into a DateTime object
+        final updatedDateTime = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+
+        // Update the correct state variable
         setState(() {
           if (isStartTime) {
-            _startTime = DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
+            _startTime = updatedDateTime;
+            // Ensure that end time is not earlier than start time
+            if (_endTime.isBefore(_startTime)) {
+              _endTime = _startTime.add(const Duration(hours: 1));
+            }
           } else {
-            _endTime = DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
+            _endTime = updatedDateTime;
+            // Ensure that end time is not earlier than start time
+            if (_endTime.isBefore(_startTime)) {
+              _startTime = _endTime.subtract(const Duration(hours: 1));
+            }
           }
         });
       }

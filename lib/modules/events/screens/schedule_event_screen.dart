@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_application/modules/meetings/meeting_cubit.dart';
 import '../cubits/event_cubit.dart';
 import '../../auth/cubits/auth_cubit.dart';
-import '../../../cubits/meeting_cubit.dart';
 import '../../../cubits/audio_command_cubit.dart';
 import '../../../models/event.dart';
 
 class ScheduleEventScreen extends StatefulWidget {
+  const ScheduleEventScreen({super.key});
+
   @override
   _ScheduleEventScreenState createState() => _ScheduleEventScreenState();
 }
@@ -16,8 +18,8 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
   String _title = '';
   String _description = '';
   DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(Duration(hours: 1));
-  List<String> _participants = [];
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
+  final List<String> _participants = [];
   bool _isGoogleMeetEnabled = false;
 
   @override
@@ -54,16 +56,16 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule Event'),
+        title: const Text('Schedule Event'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
@@ -73,20 +75,20 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
                 onSaved: (value) => _title = value!,
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 onSaved: (value) => _description = value!,
               ),
               ListTile(
-                title: Text('Start Time'),
+                title: const Text('Start Time'),
                 subtitle: Text(_startTime.toString()),
-                trailing: Icon(Icons.calendar_today),
+                trailing: const Icon(Icons.calendar_today),
                 onTap: () async {
                   final date = await showDatePicker(
                     context: context,
                     initialDate: _startTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
                   if (date != null) {
                     final time = await showTimePicker(
@@ -108,15 +110,15 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
                 },
               ),
               ListTile(
-                title: Text('End Time'),
+                title: const Text('End Time'),
                 subtitle: Text(_endTime.toString()),
-                trailing: Icon(Icons.calendar_today),
+                trailing: const Icon(Icons.calendar_today),
                 onTap: () async {
                   final date = await showDatePicker(
                     context: context,
                     initialDate: _endTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
                   if (date != null) {
                     final time = await showTimePicker(
@@ -138,7 +140,7 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
                 },
               ),
               SwitchListTile(
-                title: Text('Enable Google Meet'),
+                title: const Text('Enable Google Meet'),
                 value: _isGoogleMeetEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -148,9 +150,9 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
               ),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Schedule Event'),
+                child: const Text('Schedule Event'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               BlocConsumer<AudioCommandCubit, AudioCommandState>(
                 listener: (context, state) {
                   if (state is AudioCommandResult) {
@@ -162,14 +164,14 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
                 builder: (context, state) {
                   if (state is AudioCommandReady) {
                     return ElevatedButton(
-                      child: Text('Schedule Event by Voice'),
+                      child: const Text('Schedule Event by Voice'),
                       onPressed: () {
                         context.read<AudioCommandCubit>().startListening();
                       },
                     );
                   } else if (state is AudioCommandListening) {
                     return ElevatedButton(
-                      child: Text('Stop Listening'),
+                      child: const Text('Stop Listening'),
                       onPressed: () {
                         context.read<AudioCommandCubit>().stopListening();
                       },

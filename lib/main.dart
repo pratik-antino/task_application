@@ -4,7 +4,7 @@ import 'package:task_application/cubits/audio_command_cubit.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/cubits/calendar_cubit.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
-import 'package:task_application/cubits/meeting_cubit.dart';
+import 'package:task_application/modules/meetings/meeting_cubit.dart';
 import 'package:task_application/modules/notification/cubits/notification_cubit.dart';
 import 'package:task_application/modules/task/cubits/task_cubit.dart';
 import 'package:task_application/modules/auth/cubits/user_cubit.dart';
@@ -15,6 +15,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

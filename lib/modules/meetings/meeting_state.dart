@@ -1,7 +1,5 @@
 part of 'meeting_cubit.dart';
 
-// abstract class part of 'meeting_cubit.dart';
-
 abstract class MeetingState {}
 
 class MeetingInitial extends MeetingState {}

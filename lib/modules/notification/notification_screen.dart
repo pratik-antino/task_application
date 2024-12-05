@@ -4,6 +4,8 @@ import 'cubits/notification_cubit.dart';
 import '../auth/cubits/auth_cubit.dart';
 
 class NotificationScreen extends StatelessWidget {
+  const NotificationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authState = context.read<AuthCubit>().state;
@@ -13,12 +15,12 @@ class NotificationScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
       body: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (context, state) {
           if (state is NotificationLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is NotificationLoaded) {
             return ListView.builder(
               itemCount: state.notifications.length,
@@ -41,7 +43,7 @@ class NotificationScreen extends StatelessWidget {
           } else if (state is NotificationError) {
             return Center(child: Text(state.message));
           } else {
-            return Center(child: Text('No notifications'));
+            return const Center(child: Text('No notifications'));
           }
         },
       ),

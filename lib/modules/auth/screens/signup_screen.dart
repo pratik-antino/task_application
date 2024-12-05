@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/home/screen/home_screen.dart';
 import '../cubits/auth_cubit.dart';
-import '../../task/screens/task_list_screen.dart';
-
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -25,7 +25,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign Up')),
+      appBar: AppBar(title: const Text('Sign Up')),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
@@ -40,13 +40,13 @@ class _SignupScreenState extends State<SignupScreen> {
         },
         builder: (context, state) {
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your name';
@@ -56,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     onSaved: (value) => _name = value!,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(labelText: 'Email'),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty || !value.contains('@')) {
@@ -67,7 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     onSaved: (value) => _email = value!,
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Password'),
+                    decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty || value.length < 6) {
@@ -77,16 +77,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                     onSaved: (value) => _password = value!,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   if (state is AuthLoading)
-                    CircularProgressIndicator()
+                    const CircularProgressIndicator()
                   else
                     ElevatedButton(
-                      child: Text('Sign Up'),
                       onPressed: _submit,
+                      child: Text('Sign Up'),
                     ),
                   TextButton(
-                    child: Text('Already have an account? Login'),
+                    child: const Text('Already have an account? Login'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

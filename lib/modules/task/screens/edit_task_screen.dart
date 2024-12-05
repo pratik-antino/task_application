@@ -7,7 +7,7 @@ import 'package:task_application/models/task.dart';
 class EditTaskScreen extends StatefulWidget {
   final Task task;
 
-  const EditTaskScreen({Key? key, required this.task}) : super(key: key);
+  const EditTaskScreen({super.key, required this.task});
 
   @override
   State<EditTaskScreen> createState() => _EditTaskScreenState();
@@ -78,7 +78,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 onChanged: (value) => setState(() => _priority = value),
               ),
               CheckboxListTile(
-                title: Text('Completed'),
+                title: const Text('Completed'),
                 value: _status == 'Done',
                 onChanged: (bool? value) {
                   setState(() {
@@ -103,7 +103,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 child: Text(
                     'Select Due Date: ${_dueDate?.toIso8601String() ?? ''}'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               ElevatedButton(

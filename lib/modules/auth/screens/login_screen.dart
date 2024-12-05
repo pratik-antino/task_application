@@ -5,6 +5,8 @@ import '../cubits/auth_cubit.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -24,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: const Text('Login')),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Center(
               child: Form(
                 key: _formKey,
@@ -47,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
-                        decoration: InputDecoration(labelText: 'Email'),
+                        decoration: const InputDecoration(labelText: 'Email'),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty || !value.contains('@')) {
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onSaved: (value) => _email = value!,
                       ),
                       TextFormField(
-                        decoration: InputDecoration(labelText: 'Password'),
+                        decoration: const InputDecoration(labelText: 'Password'),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty || value.length < 6) {
@@ -68,16 +70,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         onSaved: (value) => _password = value!,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if (state is AuthLoading)
-                        CircularProgressIndicator()
+                        const CircularProgressIndicator()
                       else
                         ElevatedButton(
-                          child: Text('Login'),
                           onPressed: _submit,
+                          child: Text('Login'),
                         ),
                       TextButton(
-                        child: Text('Don\'t have an account? Sign up'),
+                        child: const Text('Don\'t have an account? Sign up'),
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (ctx) => SignupScreen()),
