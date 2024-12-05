@@ -1,31 +1,43 @@
-const express = require('express');
+import express from 'express';
+import Event from '../models/event.js';
+import { authenticateUser } from '../middleware/auth.js';
+
 const router = express.Router();
-const Event = require('../models/event');
 
 // Get all events
-router.get('/', async (req, res) => {
+// Get all events
+router.get('/', authenticateUser, async (req, res) => {
   try {
-    const events = await Event.find();
-    res.json(events);
+    const events = await Event.find().sort({ startTime: 1 }); // Sort by start time (earliest first)
+    res.status(200).json(events);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: `Error fetching events: ${err.message}` });
   }
 });
 
 // Create a new event
-router.post('/', async (req, res) => {
-  const event = new Event({
-    title: req.body.title,
-    description: req.body.description,
-    startTime: req.body.startTime,
-    endTime: req.body.endTime,
-  });
+router.post('/', authenticateUser, async (req, res) => {
+  const { title, description, startTime, endTime, participants, sharedWith } = req.body;
+
+  if (!title || !startTime || !endTime) {
+    return res.status(400).json({ message: 'Title, start time, and end time are required.' });
+  }
 
   try {
-    const newEvent = await event.save();
+    const newEvent = new Event({
+      title,
+      description,
+      startTime,
+      endTime,
+      participants,
+      sharedWith,
+      ownerId: req.user._id, // Use the authenticated user's ID for ownerId
+    });
+
+    await newEvent.save();
     res.status(201).json(newEvent);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ message: `Error creating event: ${err.message}` });
   }
 });
 
@@ -62,5 +74,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
 

@@ -28,8 +28,8 @@ class HomeScreen extends StatelessWidget {
           _buildGridItem(context, 'Task Management', Icons.assignment, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_) => TaskListScreen()));
           }),
-          _buildGridItem(context, 'Meeting Scheduling', Icons.event, () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScheduleEventScreen()));
+          _buildGridItem(context, 'Event Scheduling', Icons.event, () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarScreen()));
           }),
         ],
       ),

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import meetingRoutes from './routes/meetingRoutes.js';
+import eventRoutes from './routes/events.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ mongoose.connect("mongodb+srv://pratik-16:pratik-16@pratikcluster.bgr4e.mongodb.
 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/events', eventRoutes);
 app.use('/api/meetings', meetingRoutes);
 
 app.listen(PORT, () => {

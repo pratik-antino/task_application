@@ -7,7 +7,6 @@ class Event {
   final List<String> participants;
   final String ownerId;
   final List<String> sharedWith;
-  final String? meetingLink;
 
   Event({
     required this.id,
@@ -18,27 +17,25 @@ class Event {
     required this.participants,
     required this.ownerId,
     required this.sharedWith,
-    this.meetingLink, required createdBy,
   });
 
+  // Convert JSON to Event object
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      createdBy: '',
-      id: json['id'],
+      id: json['_id'],
       title: json['title'],
-      description: json['description'],
+      description: json['description'] ?? '',
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
-      participants: List<String>.from(json['participants']),
+      participants: List<String>.from(json['participants'] ?? []),
       ownerId: json['ownerId'],
-      sharedWith: List<String>.from(json['sharedWith']),
-      meetingLink: json['meetingLink'],
+      sharedWith: List<String>.from(json['sharedWith'] ?? []),
     );
   }
 
+  // Convert Event object to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'title': title,
       'description': description,
       'startTime': startTime.toIso8601String(),
@@ -46,33 +43,6 @@ class Event {
       'participants': participants,
       'ownerId': ownerId,
       'sharedWith': sharedWith,
-      'meetingLink': meetingLink,
     };
   }
-
-  Event copyWith({
-    String? id,
-    String? title,
-    String? description,
-    DateTime? startTime,
-    DateTime? endTime,
-    List<String>? participants,
-    String? ownerId,
-    List<String>? sharedWith,
-    String? meetingLink,
-  }) {
-    return Event(
-      createdBy: '',
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      participants: participants ?? this.participants,
-      ownerId: ownerId ?? this.ownerId,
-      sharedWith: sharedWith ?? this.sharedWith,
-      meetingLink: meetingLink ?? this.meetingLink,
-    );
-  }
 }
-

@@ -5,6 +5,7 @@ import 'package:task_application/models/event.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/add_edit_event_screen.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
+import 'package:task_application/modules/events/edit_event_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -39,7 +40,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         },
         builder: (context, state) {
           if (state is EventInitial || state is EventLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is EventLoaded) {
             return Column(
               children: [
@@ -66,7 +67,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     _focusedDay = focusedDay;
                   },
                   eventLoader: (day) {
-                    return state.events.where((event) => isSameDay(event.startTime, day)).toList();
+                    return state.events
+                        .where((event) => isSameDay(event.startTime, day))
+                        .toList();
                   },
                 ),
                 Expanded(
@@ -74,7 +77,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ],
             );
-          }  else {
+          } else {
             return Center(child: Text('An error occurred'));
           }
         },
@@ -87,35 +90,49 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildEventList(List<Event> events) {
-    final eventsOnSelectedDay = events.where((event) => isSameDay(event.startTime, _selectedDay)).toList();
+    final eventsOnSelectedDay = events
+        .where((event) => isSameDay(event.startTime, _selectedDay))
+        .toList();
 
     if (eventsOnSelectedDay.isEmpty) {
       return Center(child: Text('No events on this day.'));
     }
 
-    return ListView.builder(
-      itemCount: eventsOnSelectedDay.length,
-      itemBuilder: (context, index) {
-        final event = eventsOnSelectedDay[index];
-        return ListTile(
-          title: Text(event.title),
-          subtitle: Text('${event.startTime.toString()} - ${event.endTime.toString()}'),
-          onTap: () => _editEvent(context, event),
-        );
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: eventsOnSelectedDay.length,
+            itemBuilder: (context, index) {
+              final event = eventsOnSelectedDay[index];
+              return Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: ListTile(
+                  title: Text(event.title),
+                  subtitle: Text(
+                      '${event.startTime.toString()} - ${event.endTime.toString()}'),
+                  onTap: () => _editEvent(context, event),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
   void _addEvent(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => AddEditEventScreen(selectedDate: _selectedDay ?? DateTime.now())),
+      MaterialPageRoute(builder: (context) => AddEventScreen()),
     );
   }
 
   void _editEvent(BuildContext context, Event event) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => AddEditEventScreen(event: event)),
+      MaterialPageRoute(
+          builder: (context) => AddEditEventScreen(
+                event: event,
+              )),
     );
   }
 }
-

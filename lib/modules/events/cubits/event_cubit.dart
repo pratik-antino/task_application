@@ -47,16 +47,16 @@ class EventCubit extends Cubit<EventState> {
       if (response.statusCode == 201) {
         fetchEvents(token);
       } else {
-        emit(EventError('Failed to add event'));
+        // emit(EventError('Failed to add event'));
       }
     } catch (error) {
-      emit(EventError('An error occurred. Please try again.'));
+      // emit(EventError('An error occurred. Please try again.'));
     }
   }
 
   Future<void> updateEvent(Event event, String token) async {
     try {
-      final response = await http.put(
+      final response = await http.patch(
         Uri.parse('$baseUrl/events/${event.id}'),
         headers: {
           'Content-Type': 'application/json',
@@ -68,10 +68,10 @@ class EventCubit extends Cubit<EventState> {
       if (response.statusCode == 200) {
         fetchEvents(token);
       } else {
-        emit(EventError('Failed to update event'));
+        // emit(EventError('Failed to update event'));
       }
     } catch (error) {
-      emit(EventError('An error occurred. Please try again.'));
+      // emit(EventError('An error occurred. Please try again.'));
     }
   }
 
