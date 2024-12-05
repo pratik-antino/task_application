@@ -2,9 +2,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GoogleMeetService {
-  final String baseUrl = 'https://your-backend-url.com/api';
+  final String baseUrl = 'http://10.0.2.2:5000/api';
 
-  Future<String> scheduleMeeting(String token, String eventId, List<String> participants) async {
+  Future<String> scheduleMeeting(
+      String token, String eventId, List<String> participants) async {
     final response = await http.post(
       Uri.parse('$baseUrl/meetings/schedule'),
       headers: {
@@ -25,7 +26,8 @@ class GoogleMeetService {
     }
   }
 
-  Future<void> shareMeeting(String token, String meetingLink, List<String> participants) async {
+  Future<void> shareMeeting(
+      String token, String meetingLink, List<String> participants) async {
     final response = await http.post(
       Uri.parse('$baseUrl/meetings/share'),
       headers: {
@@ -43,7 +45,8 @@ class GoogleMeetService {
     }
   }
 
-  Future<void> inviteParticipants(String token, String meetingLink, List<String> participants) async {
+  Future<void> inviteParticipants(
+      String token, String meetingLink, List<String> participants) async {
     final response = await http.post(
       Uri.parse('$baseUrl/meetings/invite'),
       headers: {
@@ -93,7 +96,7 @@ class GoogleMeetService {
 
   String generateMeetingLink() {
     // This is a simplified version. In a real-world scenario, you'd generate a unique link
-    return 'https://meet.google.com/' + DateTime.now().millisecondsSinceEpoch.toString();
+    return 'https://meet.google.com/' +
+        DateTime.now().millisecondsSinceEpoch.toString();
   }
 }
-

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
+import 'package:task_application/modules/auth/cubits/user_cubit.dart';
+import 'package:task_application/modules/auth/cubits/user_state.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import '../../../models/event.dart';
 
@@ -18,6 +20,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
   List<String> _participants = [];
+  bool _selectAll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthCubit>().state;
+    if (authState is AuthAuthenticated) {
+      context.read<UserCubit>().fetchUsers(authState.token);
+    }
+  }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -33,7 +45,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           endTime: _endTime,
           participants: _participants,
           ownerId: authState.userId,
-          sharedWith: [],
+          sharedWith: _participants,
         );
 
         context.read<EventCubit>().addEvent(event, authState.token);
@@ -48,6 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Event'),
@@ -80,9 +93,56 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDateTime(context, isStartTime: false),
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Participants (comma-separated emails)'),
-                onSaved: (value) => _participants = value!.split(',').map((e) => e.trim()).toList(),
+              BlocBuilder<UserCubit, UserState>(
+                builder: (context, state) {
+                  if (state is UserLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is UserLoaded) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CheckboxListTile(
+                          title: const Text('Select All Users'),
+                          value: _selectAll,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectAll = value!;
+                              if (_selectAll) {
+                                _participants = state.users.map((user) => user.id).toList();
+                              } else {
+                                _participants.clear();
+                              }
+                            });
+                          },
+                        ),
+                        Wrap(
+                          children: state.users.map((user) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                label: Text(user.name),
+                                selected: _participants.contains(user.id),
+                                onSelected: (isSelected) {
+                                  setState(() {
+                                    if (isSelected) {
+                                      _participants.add(user.id);
+                                    } else {
+                                      _participants.remove(user.id);
+                                      _selectAll = false; // Uncheck "Select All" if deselected
+                                    }
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    );
+                  } else if (state is UserError) {
+                    return Text('Error loading users: ${state.message}');
+                  }
+                  return const SizedBox();
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -99,7 +159,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Future<void> _selectDateTime(BuildContext context, {required bool isStartTime}) async {
     final currentDate = isStartTime ? _startTime : _endTime;
 
-    // Select the date
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: currentDate,
@@ -108,14 +167,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
 
     if (selectedDate != null) {
-      // Select the time
       final selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(currentDate),
       );
 
       if (selectedTime != null) {
-        // Combine the selected date and time into a DateTime object
         final updatedDateTime = DateTime(
           selectedDate.year,
           selectedDate.month,
@@ -124,17 +181,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
           selectedTime.minute,
         );
 
-        // Update the correct state variable
         setState(() {
           if (isStartTime) {
             _startTime = updatedDateTime;
-            // Ensure that end time is not earlier than start time
             if (_endTime.isBefore(_startTime)) {
               _endTime = _startTime.add(const Duration(hours: 1));
             }
           } else {
             _endTime = updatedDateTime;
-            // Ensure that end time is not earlier than start time
             if (_endTime.isBefore(_startTime)) {
               _startTime = _endTime.subtract(const Duration(hours: 1));
             }

@@ -30,34 +30,39 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
     _endTime = widget.event.endTime;
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+ void _submitForm() {
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
 
-      final authState = context.read<AuthCubit>().state;
-      if (authState is AuthAuthenticated) {
-        final updatedEvent = Event(
-          id: widget.event.id,
-          title: _title,
-          description: _description,
-          startTime: _startTime,
-          endTime: _endTime,
-          participants: widget.event.participants, // Keep existing participants
-          sharedWith: widget.event.sharedWith, // Keep existing sharedWith
-          ownerId: authState.userId, // Ensure the ownerId is set to the authenticated user's ID
-        );
-
-        // Trigger the Cubit to update the event
-        context.read<EventCubit>().updateEvent(updatedEvent, authState.token);
-
-        Navigator.of(context).pop(); // Close the screen after submitting
-      } else {
+    final authState = context.read<AuthCubit>().state;
+    if (authState is AuthAuthenticated) {
+      if (authState.userId != widget.event.ownerId) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Authentication error. Please log in again.')),
+          const SnackBar(content: Text('Only the creator can edit this event.')),
         );
+        return;
       }
+
+      final updatedEvent = Event(
+        id: widget.event.id,
+        title: _title,
+        description: _description,
+        startTime: _startTime,
+        endTime: _endTime,
+        participants: widget.event.participants,
+        sharedWith: widget.event.sharedWith,
+        ownerId: authState.userId,
+      );
+
+      context.read<EventCubit>().updateEvent(updatedEvent, authState.token);
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Authentication error. Please log in again.')),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

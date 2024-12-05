@@ -30,6 +30,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.read<AuthCubit>().state;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Calendar')),
       body: BlocConsumer<EventCubit, EventState>(
@@ -43,7 +45,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
         builder: (context, state) {
           if (state is EventInitial || state is EventLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is EventLoaded) {
+          } else if (state is EventLoaded && authState is AuthAuthenticated) {
+            // Filter events for participants or owner
+            final userId = authState.userId;
+            final userEvents = state.events.where((event) =>
+                event.ownerId == userId ||
+                event.participants.contains(userId)).toList();
+
             return Column(
               children: [
                 TableCalendar(
@@ -69,13 +77,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     _focusedDay = focusedDay;
                   },
                   eventLoader: (day) {
-                    return state.events
+                    return userEvents
                         .where((event) => isSameDay(event.startTime, day))
                         .toList();
                   },
                 ),
                 Expanded(
-                  child: _buildEventList(state.events),
+                  child: _buildEventList(userEvents),
                 ),
               ],
             );
@@ -92,6 +100,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildEventList(List<Event> events) {
+    final authState = context.read<AuthCubit>().state;
+    if (authState is! AuthAuthenticated) return Container();
+
+    final userId = authState.userId;
     final eventsOnSelectedDay = events
         .where((event) => isSameDay(event.startTime, _selectedDay))
         .toList();
@@ -100,26 +112,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
       return const Center(child: Text('No events on this day.'));
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: eventsOnSelectedDay.length,
-            itemBuilder: (context, index) {
-              final event = eventsOnSelectedDay[index];
-              return Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: ListTile(
-                  title: Text(event.title),
-                  subtitle: Text(
-                      '${event.startTime.toString()} - ${event.endTime.toString()}'),
-                  onTap: () => _editEvent(context, event),
-                ),
-              );
-            },
+    return ListView.builder(
+      itemCount: eventsOnSelectedDay.length,
+      itemBuilder: (context, index) {
+        final event = eventsOnSelectedDay[index];
+        final isCreator = event.ownerId == userId;
+
+        return Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: ListTile(
+            title: Text(event.title),
+            subtitle: Text(
+                '${event.startTime.toString()} - ${event.endTime.toString()}'),
+            onTap: () => isCreator ? _editEvent(context, event) : null,
+            trailing: isCreator
+                ? const Icon(Icons.edit, color: Colors.blue)
+                : const Icon(Icons.visibility, color: Colors.grey),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 
