@@ -38,18 +38,26 @@ router.post('/', authenticateUser, async (req, res) => {
   }
 });
 
-// Get all tasks
+// Get tasks created by or assigned to the authenticated user
 router.get('/', authenticateUser, async (req, res) => {
   try {
-    const tasks = await Task.find({ $or: [{ assignedTo: req.user._id }, { createdBy: req.user._id }] })
-      .populate('assignedTo', 'name email')
-      .populate('createdBy', 'name email');
+    // Fetch tasks where the authenticated user is either the creator or the assignee
+    const tasks = await Task.find({
+      $or: [
+        { createdBy: req.user._id }, // Tasks created by the user
+        { assignedTo: req.user._id } // Tasks assigned to the user
+      ]
+    })
+    .populate('assignedTo', 'name email') // Populate the assigned user's details
+    .populate('createdBy', 'name email'); // Populate the creator's details
+
     res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Failed to fetch tasks', error: error.message });
   }
 });
-// Delete a task
+
+// ete a task
 router.delete('/:id', async (req, res) => {
   try {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);

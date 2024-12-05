@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../../models/task.dart';
-
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
@@ -20,7 +19,6 @@ class TaskCubit extends Cubit<TaskState> {
           'Authorization': 'Bearer $token',
         },
       );
-
       if (response.statusCode == 200) {
         final List<dynamic> tasksJson = json.decode(response.body);
         final tasks = tasksJson.map((json) => Task.fromJson(json)).toList();

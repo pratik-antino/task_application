@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../../models/event.dart';
-
 part 'event_state.dart';
 
 class EventCubit extends Cubit<EventState> {
@@ -68,7 +67,7 @@ class EventCubit extends Cubit<EventState> {
       if (response.statusCode == 200) {
         fetchEvents(token);
       } else {
-        // emit(EventError('Failed to update event'));
+        emit(EventError('Failed to update event'));
       }
     } catch (error) {
       // emit(EventError('An error occurred. Please try again.'));
