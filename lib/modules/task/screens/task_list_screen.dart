@@ -21,17 +21,6 @@ class TaskListScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Tasks'),
-              // actions: [
-              //   IconButton(
-              //     icon: const Icon(Icons.exit_to_app),
-              //     onPressed: () {
-              //       context.read<AuthCubit>().logout();
-              //       Navigator.of(context).pushReplacement(
-              //         MaterialPageRoute(builder: (context) => LoginScreen()),
-              //       );
-              //     },
-              //   ),
-              // ],
             ),
             body: BlocBuilder<TaskCubit, TaskState>(
               builder: (context, taskState) {

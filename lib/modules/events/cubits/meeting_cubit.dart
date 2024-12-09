@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-part './meeting_state.dart';
+part 'meeting_state.dart';
 
 class MeetingCubit extends Cubit<MeetingState> {
   MeetingCubit() : super(MeetingInitial());

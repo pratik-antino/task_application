@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/auth/screens/login_screen.dart';
-import 'package:task_application/modules/meetings/meeting.dart';
+import 'package:task_application/modules/meeting_module/screens/google_calender_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../task/screens/task_list_screen.dart';
 import '../../events/calendar_screen.dart';

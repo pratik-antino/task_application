@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_application/modules/meetings/meeting_cubit.dart';
+import 'package:task_application/modules/events/cubits/meeting_cubit.dart';
 import '../cubits/event_cubit.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../../cubits/audio_command_cubit.dart';
