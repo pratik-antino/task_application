@@ -7,6 +7,7 @@ import '../cubits/task_cubit.dart';
 import '../../../models/task.dart';
 import '../../auth/screens/login_screen.dart';
 
+// ignore: must_be_immutable
 class TaskListScreen extends StatelessWidget {
   late String token;
 

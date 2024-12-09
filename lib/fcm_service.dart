@@ -64,7 +64,7 @@ class FCMService {
   Future<void> sendTokenToBackend(String token, String usertoken) async {
     // Replace with your backend API endpoint
     const String backendUrl =
-        'https://779a-2409-40d0-1020-c9a9-95a1-2b9d-bb8b-e6cb.ngrok-free.app/api/tokens/save-token';
+        'https://d638-121-243-82-214.ngrok-free.app/api/tokens/save-token';
     try {
       final response = await http.post(
         Uri.parse(backendUrl),

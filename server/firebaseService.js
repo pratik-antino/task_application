@@ -1,20 +1,25 @@
 import admin from 'firebase-admin';
-import dotenv from 'dotenv';
+import { readFileSync } from 'fs';
+import path from 'path';
 
-// Load environment variables
-dotenv.config();
+// Define the path to your service account key file
+const serviceAccountPath = path.resolve('C:/task_application/server/serviceAccountKey.json');
 
-try {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Corrects line breaks in private key
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    }),
-  });
-  console.log('Firebase Admin initialized successfully');
-} catch (error) {
-  console.error('Error initializing Firebase Admin:', error.message);
+// Parse the service account key JSON file
+const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));
+
+// Initialize Firebase Admin SDK
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    console.log('Firebase Admin initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Firebase Admin:', error.message);
+  }
+} else {
+  console.log('Firebase Admin is already initialized');
 }
 
 export default admin;

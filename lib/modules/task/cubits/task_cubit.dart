@@ -7,7 +7,7 @@ part 'task_state.dart';
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
 
-  final String baseUrl = 'https://779a-2409-40d0-1020-c9a9-95a1-2b9d-bb8b-e6cb.ngrok-free.app/api'; // Replace with your actual backend URL
+  final String baseUrl = 'https://d638-121-243-82-214.ngrok-free.app/api'; // Replace with your actual backend URL
 
   Future<void> fetchTasks(String token) async {
     emit(TaskLoading());

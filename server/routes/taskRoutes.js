@@ -2,6 +2,8 @@ import express from 'express';
 import Task from "../models/task.js";
 import User from '../models/User.js';
 import { authenticateUser } from '../middleware/auth.js';
+import cron from 'node-cron';
+import admin from 'firebase-admin';
 
 const router = express.Router();
 
@@ -28,10 +30,40 @@ router.post('/', authenticateUser, async (req, res) => {
 
     await task.save();
 
+
+     // Populate the assignedTo field to get the FCM token
+     const fcmTokens = assignedUser.fcmTokens.filter(token => token);
+
+     // Send notification to assignee
+     const notificationTitle = `New Task: ${title}`;
+     const notificationBody = description || 'You have been assigned a new task!';
+     sendNotification(fcmTokens, notificationTitle, notificationBody);
+ 
+     // Schedule a reminder 10 minutes before the due date
+     const reminderTime = new Date(new Date(dueDate).getTime() - 10 * 60 * 1000); // 10 minutes before the due date
+     const currentTime = new Date();
+ 
+     if (reminderTime > currentTime) {
+       const cronExpression = `${reminderTime.getMinutes()} ${reminderTime.getHours()} ${reminderTime.getDate()} ${reminderTime.getMonth() + 1} *`;
+       cron.schedule(cronExpression, async () => {
+         const reminderTitle = `Reminder: ${title}`;
+         const reminderBody = `Your task "${title}" is due soon.`;
+         sendNotification(fcmTokens, reminderTitle, reminderBody);
+       });
+     }
+  // Send overdue alerts if the task is overdue
+  const overdueTime = new Date(new Date(dueDate).getTime());
+  const overdueCronExpression = `${overdueTime.getMinutes()} ${overdueTime.getHours()} ${overdueTime.getDate()} ${overdueTime.getMonth() + 1} *`;
+  cron.schedule(overdueCronExpression, async () => {
+    const overdueTitle = `Overdue Task: ${title}`;
+    const overdueBody = `The task "${title}" is overdue. Please complete it as soon as possible.`;
+    sendNotification(fcmTokens, overdueTitle, overdueBody);
+  });
+
+  
     // Populate the assignedTo and createdBy fields
     await task.populate('assignedTo', 'name email');
     await task.populate('createdBy', 'name email');
-
     res.status(201).json(task);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -109,5 +141,34 @@ router.post('/register-fcm-token', authenticateUser, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Helper function to send notifications
+const sendNotification = async (tokens, title, body) => {
+  if (tokens.length > 0) {
+    const message = {
+      notification: { title, body },
+      tokens,
+    };
+    console.log('Sending message:', message);
+    admin
+      .messaging()
+      .sendEachForMulticast(message)
+      .then((response) => {
+        console.log(`${response.successCount} messages were sent successfully`);
+        console.log(`${response.failureCount} messages failed to send`);
+        response.responses.forEach((res, index) => {
+          if (res.success) {
+            console.log(`Notification sent successfully to token: ${tokens[index]}`);
+          } else {
+            console.error(`Failed to send notification to token: ${tokens[index]}, Error: ${res.error.message}`);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error sending notifications:', error);
+      });
+  }
+};
+
 export default router;
 

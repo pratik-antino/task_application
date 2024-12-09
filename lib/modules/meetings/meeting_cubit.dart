@@ -7,7 +7,7 @@ part './meeting_state.dart';
 class MeetingCubit extends Cubit<MeetingState> {
   MeetingCubit() : super(MeetingInitial());
 
-  final String baseUrl = 'http://10.0.2.2:5000/api'; // Replace with your actual backend URL
+  final String baseUrl = 'https://d638-121-243-82-214.ngrok-free.app/api'; // Replace with your actual backend URL
 
   Future<void> scheduleMeeting(String eventId, List<String> participants, String token) async {
     emit(MeetingLoading());

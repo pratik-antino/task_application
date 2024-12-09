@@ -106,19 +106,34 @@ router.delete('/:id', async (req, res) => {
 // Helper function to send notifications
 const sendNotification = async (tokens, title, body) => {
   console.log('tdhtfygukhjn')
-  try {
+ 
     if (tokens.length > 0) {
       const message = {
         notification: { title, body },
         tokens,
       };
       console.log('Sending message:', message);
-      const response = await admin.messaging().sendMulticast(message);
-      console.log('Notifications sent:', response.successCount);
+      admin
+      .messaging()
+      .sendEachForMulticast(message)
+      .then((response) => {
+        console.log(`${response.successCount} messages were sent successfully`);
+        console.log(`${response.failureCount} messages failed to send`);
+    
+        response.responses.forEach((res, index) => {
+          if (res.success) {
+            console.log(`Notification sent successfully to token: ${tokens[index]}`);
+          } else {
+            console.error(
+              `Failed to send notification to token: ${tokens[index]}, Error: ${res.error.message}`
+            );
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error sending notifications:', error);
+      });
     }
-  } catch (error) {
-    console.error('Firebase Messaging Error:', error.code, error.message, error.stack);
-  }
 };
 
 
