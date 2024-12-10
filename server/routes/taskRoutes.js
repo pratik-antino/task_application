@@ -104,6 +104,7 @@ router.delete('/:id', async (req, res) => {
 
 // Update a task
 router.patch('/:id', async (req, res) => {
+  console.log('called update')
   try {
     const task = await Task.findById(req.params.id);
     if (req.body.title) {
@@ -112,9 +113,20 @@ router.patch('/:id', async (req, res) => {
     if (req.body.description) {
       task.description = req.body.description;
     }
-    if (req.body.isCompleted !== undefined) {
-      task.isCompleted = req.body.isCompleted;
+    if(req.body.assignedTo){
+      task.assignedTo=req.body.assignedTo;
     }
+   if (req.body.priority) {
+    task.priority = req.body.priority;
+
+}
+   if (req.body.status) {
+    task.status = req.body.status;
+
+}
+if(req.body.dueDate){
+  task.dueDate= req.body.dueDate;
+}
     const updatedTask = await task.save();
     res.json(updatedTask);
   } catch (err) {

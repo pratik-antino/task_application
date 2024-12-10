@@ -1,8 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:googleapis/calendar/v3.dart' as api;
 import 'package:intl/intl.dart';
+import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
+import 'package:task_application/modules/auth/cubits/user_cubit.dart';
+import 'package:task_application/modules/auth/cubits/user_state.dart';
 
 class ScheduleMeetingScreen extends StatefulWidget {
   final api.CalendarApi calendarApi;
@@ -23,6 +27,7 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
   DateTime _endDate = DateTime.now().add(Duration(hours: 1));
   late TimeOfDay _endTime;
   List<String> _attendees = [];
+  bool _selectAll = false;
   final TextEditingController _emailController = TextEditingController();
   @override
   void initState() {
@@ -37,7 +42,12 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
 
     // Convert the DateTime back to TimeOfDay
     _endTime = TimeOfDay(hour: newTime.hour, minute: newTime.minute);
+    final authState = context.read<AuthCubit>().state;
+    if (authState is AuthAuthenticated) {
+      context.read<UserCubit>().fetchUsers(authState.token);
+    }
   }
+  
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -198,8 +208,62 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
                   ],
                 ),
                 SizedBox(height: 16),
-                Text('Attendees'),
+                BlocBuilder<UserCubit, UserState>(
+                  builder: (context, state) {
+                  if (state is UserLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is UserLoaded) {
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CheckboxListTile(
+                            title: const Text('Select All Users'),
+                            value: _selectAll,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectAll = value!;
+                                if (_selectAll) {
+                                  _attendees = state.users
+                                      .map((user) => user.email)
+                                      .toList();
+                                } else {
+                                  _attendees.clear();
+                                }
+                              });
+                            },
+                          ),
+                          Wrap(
+                            children: state.users.map((user) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: FilterChip(
+                                  label: Text(user.name),
+                                  selected: _attendees.contains(user.id),
+                                  onSelected: (isSelected) {
+                                    setState(() {
+                                      if (isSelected) {
+                                        _attendees.add(user.email);
+                                      } else {
+                                        _attendees.remove(user.email);
+                                        _selectAll =
+                                            false; // Uncheck "Select All" if deselected
+                                      }
+                                    });
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ]);
+                  }
+                   else if (state is UserError) {
+                    return Text('Error loading users: ${state.message}');
+                  }
+                  return const SizedBox();
                 
+                }
+                ),
+                Text('Attendees'),
                 ..._attendees.map((email) => Chip(label: Text(email))).toList(),
                 Row(
                   children: [

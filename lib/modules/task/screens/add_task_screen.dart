@@ -5,7 +5,7 @@ import '../cubits/task_cubit.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../auth/cubits/user_cubit.dart';
 import '../../auth/cubits/user_state.dart';
-import '../../../models/task.dart';
+import '../model/task.dart';
 import '../../../models/user.dart';
 
 class AddTaskScreen extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_application/models/event.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
-import 'package:task_application/modules/events/add_edit_event_screen.dart';
+import 'package:task_application/modules/events/add_event_screen.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/modules/events/edit_event_screen.dart';
 

@@ -26,7 +26,7 @@ class Task {
       id: json['_id'],
       title: json['title'],
       description: json['description'],
-      assignedTo: json['assignedTo']['name'],
+      assignedTo: json['assignedTo']['_id'],
       createdBy: json['createdBy']['_id'],
       priority: json['priority'],
       status: json['status'],

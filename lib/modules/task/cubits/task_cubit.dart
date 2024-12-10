@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../../models/task.dart';
+import '../model/task.dart';
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {

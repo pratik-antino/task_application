@@ -93,6 +93,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDateTime(context, isStartTime: false),
               ),
+            
               BlocBuilder<UserCubit, UserState>(
                 builder: (context, state) {
                   if (state is UserLoading) {

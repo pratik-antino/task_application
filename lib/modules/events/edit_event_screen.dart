@@ -156,7 +156,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Update Event'),
+                child:const Text('Update Event'),
               ),
             ],
           ),

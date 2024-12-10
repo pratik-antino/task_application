@@ -4,7 +4,7 @@ import 'package:task_application/modules/task/screens/add_task_screen.dart';
 import 'package:task_application/modules/task/screens/edit_task_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
-import '../../../models/task.dart';
+import '../model/task.dart';
 import '../../auth/screens/login_screen.dart';
 
 // ignore: must_be_immutable
