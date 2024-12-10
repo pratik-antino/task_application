@@ -4,7 +4,7 @@ import 'package:task_application/modules/events/cubits/meeting_cubit.dart';
 import '../cubits/event_cubit.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../../../cubits/audio_command_cubit.dart';
-import '../../../models/event.dart';
+import '../event.dart';
 
 class ScheduleEventScreen extends StatefulWidget {
   const ScheduleEventScreen({super.key});

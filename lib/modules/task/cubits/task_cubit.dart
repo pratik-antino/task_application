@@ -127,7 +127,7 @@ Future<void> fetchComments(String taskId, String token) async {
     if (response.statusCode == 200) {
       final List<dynamic> commentsJson = json.decode(response.body);
       final comments = commentsJson.map((json) => Comment.fromJson(json)).toList();
-      // Update the specific task's comments in the state
+      
     } else {
       emit(TaskError('Failed to fetch comments'));
     }

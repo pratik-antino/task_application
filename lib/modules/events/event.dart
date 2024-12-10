@@ -1,3 +1,5 @@
+import 'package:task_application/modules/task/model/comment_model.dart';
+
 class Event {
   final String id;
   final String title;
@@ -7,6 +9,7 @@ class Event {
   final List<String> participants;
   final String ownerId;
   final List<String> sharedWith;
+  final List<Comment> comments;
 
   Event({
     required this.id,
@@ -17,6 +20,7 @@ class Event {
     required this.participants,
     required this.ownerId,
     required this.sharedWith,
+    this.comments=const [],
   });
 
   // Convert JSON to Event object
@@ -30,6 +34,10 @@ class Event {
       participants: List<String>.from(json['participants'] ?? []),
       ownerId: json['ownerId'],
       sharedWith: List<String>.from(json['sharedWith'] ?? []),
+      comments: (json['comments'] as List?)
+              ?.map((commentJson) => Comment.fromJson(commentJson))
+              .toList() ??
+          [], // Parse comments from JSON (if any).
     );
   }
 
@@ -43,6 +51,7 @@ class Event {
       'participants': participants,
       'ownerId': ownerId,
       'sharedWith': sharedWith,
+      'comments': comments.map((comment) => comment.toJson()).toList(),
     };
   }
 }

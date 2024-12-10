@@ -4,7 +4,7 @@ import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/auth/cubits/user_cubit.dart';
 import 'package:task_application/modules/auth/cubits/user_state.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
-import '../../../models/event.dart';
+import 'event.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});

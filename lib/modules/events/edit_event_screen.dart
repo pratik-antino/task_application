@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_application/models/event.dart';
+import 'package:task_application/modules/events/event.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart'; // Your EventCubit
 

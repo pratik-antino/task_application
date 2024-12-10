@@ -10,7 +10,13 @@ const router = express.Router();
 // Get all events
 router.get('/', authenticateUser, async (req, res) => {
   try {
-    const events = await Event.find().sort({ startTime: 1 }); // Sort by start time (earliest first)
+    const events = await Event.find().sort({ startTime: 1 }).populate({
+      path: 'comments',
+      populate: {
+        path: 'createdBy', // Populate the creator of each comment
+        select: 'name email', // Select fields to populate
+      }}); // Populate comments
+     // Sort by start time (earliest first)
     res.status(200).json(events);
   } catch (err) {
     res.status(500).json({ message: `Error fetching events: ${err.message}` });

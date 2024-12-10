@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:task_application/models/event.dart';
+import 'package:task_application/modules/events/event.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/add_event_screen.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
-import 'package:task_application/modules/events/edit_event_screen.dart';
+import 'package:task_application/modules/events/screens/event_detail_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -48,9 +48,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
           } else if (state is EventLoaded && authState is AuthAuthenticated) {
             // Filter events for participants or owner
             final userId = authState.userId;
-            final userEvents = state.events.where((event) =>
-                event.ownerId == userId ||
-                event.participants.contains(userId)).toList();
+            final userEvents = state.events
+                .where((event) =>
+                    event.ownerId == userId ||
+                    event.participants.contains(userId))
+                .toList();
 
             return Column(
               children: [
@@ -83,7 +85,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   },
                 ),
                 Expanded(
-                  child: _buildEventList(userEvents),
+                  child: _buildEventList(userEvents,authState.token),
                 ),
               ],
             );
@@ -99,7 +101,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildEventList(List<Event> events) {
+  Widget _buildEventList(List<Event> events, String token) {
     final authState = context.read<AuthCubit>().state;
     if (authState is! AuthAuthenticated) return Container();
 
@@ -124,7 +126,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             title: Text(event.title),
             subtitle: Text(
                 '${event.startTime.toString()} - ${event.endTime.toString()}'),
-            onTap: () => isCreator ? _editEvent(context, event) : null,
+            onTap: () => isCreator ? _editEvent(context, event,authState.token) : null,
             trailing: isCreator
                 ? const Icon(Icons.edit, color: Colors.blue)
                 : const Icon(Icons.visibility, color: Colors.grey),
@@ -140,11 +142,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  void _editEvent(BuildContext context, Event event) {
+  void _editEvent(BuildContext context, Event event, String token) {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => AddEditEventScreen(
+          builder: (context) => EventDetailScreen(
                 event: event,
+                token: token,
               )),
     );
   }

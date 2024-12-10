@@ -8,6 +8,7 @@ import meetingRoutes from './routes/meetingRoutes.js';
 import eventRoutes from './routes/events.js';
 import tokenRoutes from './routes/tokenRoutes.js';
 import commentRoutes from './routes/commentRoute.js'
+import eventCommentRoutes from './routes/eventCommentRoute.js'
 import notificationRoutes from './routes/notificationRoutes.js';
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/tokens', tokenRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/event/comments', eventCommentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

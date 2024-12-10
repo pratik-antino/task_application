@@ -31,6 +31,12 @@ const eventSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Owner ID is required'],
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'eventComment',
+    },
+  ],
 }, { timestamps: true }); // Automatically adds `createdAt` and `updatedAt` fields
 
 const Event = mongoose.model('Event', eventSchema);
