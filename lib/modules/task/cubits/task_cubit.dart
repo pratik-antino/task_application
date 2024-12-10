@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../model/comment_model.dart';
 import '../model/task.dart';
 part 'task_state.dart';
 
@@ -27,7 +28,7 @@ class TaskCubit extends Cubit<TaskState> {
         emit(TaskError('Failed to load tasks'));
       }
     } catch (error) {
-      emit(TaskError('An error occurred. Please try again.'));
+      emit(TaskError('An error occurred. Please try again.:$error'));
     }
   }
 
@@ -92,4 +93,47 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskError('An error occurred. Please try again.'));
     }
   }
+  Future<void> addComment(String taskId, String content, String token) async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/comments/$taskId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'content': content}),
+    );
+
+    if (response.statusCode == 201) {
+      fetchTasks(token);
+    } else {
+      emit(TaskError('Failed to add comment'));
+    }
+  } catch (error) {
+    emit(TaskError('An error occurred. Please try again.'));
+  }
+}
+
+Future<void> fetchComments(String taskId, String token) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/comments/$taskId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> commentsJson = json.decode(response.body);
+      final comments = commentsJson.map((json) => Comment.fromJson(json)).toList();
+      // Update the specific task's comments in the state
+    } else {
+      emit(TaskError('Failed to fetch comments'));
+    }
+  } catch (error) {
+    emit(TaskError('An error occurred. Please try again.'));
+  }
+}
+
 }

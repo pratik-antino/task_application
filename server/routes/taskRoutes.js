@@ -81,7 +81,14 @@ router.get('/', authenticateUser, async (req, res) => {
       ]
     })
     .populate('assignedTo', 'name email') // Populate the assigned user's details
-    .populate('createdBy', 'name email'); // Populate the creator's details
+    .populate('createdBy', 'name email')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'createdBy', // Populate the creator of each comment
+        select: 'name email', // Select fields to populate
+      },
+    }); // Populate the creator's details
 
     res.json(tasks);
   } catch (error) {

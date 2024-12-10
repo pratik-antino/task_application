@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/task/screens/add_task_screen.dart';
 import 'package:task_application/modules/task/screens/edit_task_screen.dart';
+import 'package:task_application/modules/task/screens/task_detail_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
 import '../model/task.dart';
@@ -86,9 +87,7 @@ class TaskListScreen extends StatelessWidget {
   void _addEditTask(BuildContext context, Task task) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditTaskScreen(
-          task: task,
-        ),
+        builder: (context) =>TaskDetailScreen(task: task, token: token)
       ),
     );
   }

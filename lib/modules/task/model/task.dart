@@ -1,3 +1,5 @@
+import 'comment_model.dart';
+
 class Task {
   final String id;
   final String title;
@@ -8,6 +10,7 @@ class Task {
   final String status;
   final DateTime dueDate;
   final bool isCompleted;
+  final List<Comment> comments;
 
   Task({
     required this.id,
@@ -19,6 +22,7 @@ class Task {
     required this.status,
     required this.dueDate,
     required this.isCompleted,
+    this.comments = const [],
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -26,24 +30,31 @@ class Task {
       id: json['_id'],
       title: json['title'],
       description: json['description'],
-      assignedTo: json['assignedTo']['_id'],
-      createdBy: json['createdBy']['_id'],
+      assignedTo: json['assignedTo']['_id'], // Fetch nested _id field
+      createdBy: json['createdBy']['_id'], // Fetch nested _id field
       priority: json['priority'],
       status: json['status'],
       dueDate: DateTime.parse(json['dueDate']),
       isCompleted: json['isCompleted'] ?? false,
+      comments: (json['comments'] as List<dynamic>?)
+              ?.map((comment) => Comment.fromJson(comment))
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      '_id': id,
       'title': title,
       'description': description,
       'assignedTo': assignedTo,
+      'createdBy': createdBy,
       'priority': priority,
       'status': status,
       'dueDate': dueDate.toIso8601String(),
       'isCompleted': isCompleted,
+      'comments': comments.map((comment) => comment.toJson()).toList(),
     };
   }
 
@@ -57,6 +68,7 @@ class Task {
     String? status,
     DateTime? dueDate,
     bool? isCompleted,
+    List<Comment>? comments,
   }) {
     return Task(
       id: id ?? this.id,
@@ -68,7 +80,7 @@ class Task {
       status: status ?? this.status,
       dueDate: dueDate ?? this.dueDate,
       isCompleted: isCompleted ?? this.isCompleted,
+      comments: comments ?? this.comments,
     );
   }
 }
-
