@@ -147,7 +147,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 
   void _addCommentDialog(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
 
     showDialog(
       context: context,

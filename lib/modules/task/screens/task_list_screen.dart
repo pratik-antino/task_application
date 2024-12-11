@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/modules/task/screens/add_task_screen.dart';
-import 'package:task_application/modules/task/screens/edit_task_screen.dart';
 import 'package:task_application/modules/task/screens/task_detail_screen.dart';
 import '../../auth/cubits/auth_cubit.dart';
 import '../cubits/task_cubit.dart';
 import '../model/task.dart';
 import '../../auth/screens/login_screen.dart';
 
-// ignore: must_be_immutable
-class TaskListScreen extends StatelessWidget {
+class TaskListScreen extends StatefulWidget {
+  TaskListScreen({super.key});
+
+  @override
+  State<TaskListScreen> createState() => _TaskListScreenState();
+}
+
+class _TaskListScreenState extends State<TaskListScreen> {
   late String token;
 
-  TaskListScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    // context.read<TaskCubit>().fet
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
         if (authState is AuthAuthenticated) {
           token = authState.token;
+          context.read<TaskCubit>().fetchTasks(authState.token);
           return Scaffold(
             appBar: AppBar(
               title: const Text('Tasks'),
@@ -34,7 +45,10 @@ class TaskListScreen extends StatelessWidget {
                 } else if (taskState is TaskLoaded) {
                   return _buildTaskList(taskState.tasks);
                 } else if (taskState is TaskError) {
-                  return Center(child: Text('Error: ${taskState.message}'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error loading task')),
+                  );
+                  return Container();
                 }
                 return const Center(child: Text('Unknown state'));
               },
@@ -87,8 +101,7 @@ class TaskListScreen extends StatelessWidget {
   void _addEditTask(BuildContext context, Task task) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>TaskDetailScreen(task: task, token: token)
-      ),
+          builder: (context) => TaskDetailScreen(task: task, token: token)),
     );
   }
 

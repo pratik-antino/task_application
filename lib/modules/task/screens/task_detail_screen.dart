@@ -8,7 +8,8 @@ class TaskDetailScreen extends StatelessWidget {
   final Task task;
   final String token;
 
-  const TaskDetailScreen({Key? key, required this.task, required this.token}) : super(key: key);
+  const TaskDetailScreen({Key? key, required this.task, required this.token})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,8 @@ class TaskDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.edit),
             onPressed: () async {
               await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EditTaskScreen(task: task)),
+                MaterialPageRoute(
+                    builder: (context) => EditTaskScreen(task: task)),
               );
               context.read<TaskCubit>().fetchTasks(token);
             },
@@ -40,7 +42,8 @@ class TaskDetailScreen extends StatelessWidget {
             const SizedBox(height: 10),
             _buildDetailRow('Due Date:', task.dueDate.toLocal().toString()),
             const SizedBox(height: 20),
-            const Text('Comments:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Comments:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Expanded(child: _buildCommentsSection(context)),
           ],
@@ -65,7 +68,8 @@ class TaskDetailScreen extends StatelessWidget {
 
   Widget _buildCommentsSection(BuildContext context) {
     // Dummy comments for now
-    final comments = task.comments; // Make sure comments are part of the Task model
+    final comments =
+        task.comments; // Make sure comments are part of the Task model
 
     return ListView.builder(
       itemCount: comments.length,
@@ -96,7 +100,8 @@ class TaskDetailScreen extends StatelessWidget {
           content: TextField(
             controller: _controller,
             maxLines: 3,
-            decoration: const InputDecoration(hintText: 'Write your comment here'),
+            decoration:
+                const InputDecoration(hintText: 'Write your comment here'),
           ),
           actions: [
             TextButton(
@@ -109,6 +114,7 @@ class TaskDetailScreen extends StatelessWidget {
                 if (content.isNotEmpty) {
                   // Call the API to add a comment
                   context.read<TaskCubit>().addComment(task.id, content, token);
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 }
               },
