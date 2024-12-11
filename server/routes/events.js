@@ -15,7 +15,10 @@ router.get('/', authenticateUser, async (req, res) => {
       populate: {
         path: 'createdBy', // Populate the creator of each comment
         select: 'name email', // Select fields to populate
-      }}); // Populate comments
+      }}) .populate({
+        path: 'sharedWith', // Populate participants
+        select: 'name email', // Include participant name and email
+      }); // Populate comments
      // Sort by start time (earliest first)
     res.status(200).json(events);
   } catch (err) {

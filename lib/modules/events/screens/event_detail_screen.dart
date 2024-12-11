@@ -96,7 +96,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: widget.event.participants.isEmpty
                           ? [const Text('No participants yet')]
-                          : widget.event.participants
+                          : widget.event.sharedWith
                               .map((participant) => Text(participant))
                               .toList(),
                     ),

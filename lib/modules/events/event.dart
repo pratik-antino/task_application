@@ -33,7 +33,7 @@ class Event {
       endTime: DateTime.parse(json['endTime']),
       participants: List<String>.from(json['participants'] ?? []),
       ownerId: json['ownerId'],
-      sharedWith: List<String>.from(json['sharedWith'] ?? []),
+      sharedWith:(json['sharedWith'] as List<dynamic>?)?.map((e) => e['name'] as String).toList() ?? [],
       comments: (json['comments'] as List?)
               ?.map((commentJson) => Comment.fromJson(commentJson))
               .toList() ??

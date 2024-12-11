@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:task_application/core/helper_function.dart';
 import 'package:task_application/modules/meeting_module/models/meeting_model.dart';
@@ -38,13 +38,21 @@ class MeetingDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(meeting.summary),
+            Text(
+              meeting.summary,
+              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19),
+            ),
             SizedBox(height: 8),
-            Text('Description:'),
+            Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
             Text(meeting.description),
             SizedBox(height: 16),
-            Text('Start Time: ${meeting.startTime}'),
-            Text('End Time: ${meeting.endTime}'),
+            Text(
+                style: TextStyle(fontWeight: FontWeight.bold),
+                'Start Time: ${DateFormat('dd-MM-yy HH:mm').format(meeting.startTime)}'),
+            SizedBox(height: 10),
+            Text(
+                style: TextStyle(fontWeight: FontWeight.bold),
+                'End Time: ${DateFormat('dd-MM-yy HH:mm').format(meeting.endTime)}'),
             SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

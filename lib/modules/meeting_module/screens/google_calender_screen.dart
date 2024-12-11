@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:task_application/modules/meeting_module/models/meeting_model.dart';
 import 'package:task_application/modules/meeting_module/screens/schedule_meeting_screen.dart';
 import 'meeting_detail_screen.dart';
+import 'package:intl/intl.dart';
 
 class GoogleCalendarScreen extends StatefulWidget {
   @override
@@ -148,8 +149,16 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
                       final meeting = _meetings[index];
                       return ListTile(
                         title: Text(meeting.summary),
-                        subtitle: Text(
-                          '${meeting.startTime.toString()} - ${meeting.endTime.toString()}',
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Starts at: ${DateFormat('dd-MM-yy HH:mm').format(meeting.startTime)}',
+                            ),
+                            Text(
+                              'ends at: ${DateFormat('dd-MM-yy HH:mm').format(meeting.endTime)}',
+                            ),
+                          ],
                         ),
                         onTap: () {
                           Navigator.push(
