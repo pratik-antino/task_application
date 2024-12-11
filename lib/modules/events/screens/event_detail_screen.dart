@@ -4,6 +4,7 @@ import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/modules/events/edit_event_screen.dart';
 import 'package:task_application/modules/events/event.dart';
+import 'package:intl/intl.dart';
 
 class EventDetailScreen extends StatefulWidget {
   final Event event;
@@ -81,12 +82,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ListTile(
                     leading: const Icon(Icons.access_time),
                     title: const Text('Start Time'),
-                    subtitle: Text(widget.event.startTime.toString()),
+                    subtitle: Text(DateFormat('dd-MM-yy HH:mm')
+                        .format(widget.event.startTime)),
                   ),
                   ListTile(
                     leading: const Icon(Icons.access_time),
                     title: const Text('End Time'),
-                    subtitle: Text(widget.event.endTime.toString()),
+                    subtitle: Text(DateFormat('dd-MM-yy HH:mm')
+                        .format(widget.event.endTime)),
                   ),
                   const SizedBox(height: 10),
                   ListTile(
@@ -147,7 +150,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 
   void _addCommentDialog(BuildContext context) {
-
     showDialog(
       context: context,
       builder: (context) {

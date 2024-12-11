@@ -6,6 +6,7 @@ import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/add_event_screen.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/modules/events/screens/event_detail_screen.dart';
+import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -85,7 +86,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   },
                 ),
                 Expanded(
-                  child: _buildEventList(userEvents,authState.token),
+                  child: _buildEventList(userEvents, authState.token),
                 ),
               ],
             );
@@ -125,8 +126,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           child: ListTile(
             title: Text(event.title),
             subtitle: Text(
-                '${event.startTime.toString()} - ${event.endTime.toString()}'),
-            onTap: () => isCreator ? _editEvent(context, event,authState.token) : null,
+                '${DateFormat('dd-MM-yy HH:mm').format(event.startTime)} - ${DateFormat('dd-MM-yy HH:mm').format(event.endTime)}'),
+            onTap: () =>
+                isCreator ? _editEvent(context, event, authState.token) : null,
             trailing: isCreator
                 ? const Icon(Icons.edit, color: Colors.blue)
                 : const Icon(Icons.visibility, color: Colors.grey),
