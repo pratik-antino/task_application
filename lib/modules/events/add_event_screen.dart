@@ -27,7 +27,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     super.initState();
     final authState = context.read<AuthCubit>().state;
     if (authState is AuthAuthenticated) {
-      context.read<UserCubit>().fetchUsers(authState.token);
+      // context.read<UserCubit>().fetchUsers(authState.token);
     }
   }
 

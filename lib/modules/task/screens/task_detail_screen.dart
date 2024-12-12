@@ -8,8 +8,7 @@ class TaskDetailScreen extends StatelessWidget {
   final Task task;
   final String token;
 
-  const TaskDetailScreen({Key? key, required this.task, required this.token})
-      : super(key: key);
+  const TaskDetailScreen({super.key, required this.task, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class TaskDetailScreen extends StatelessWidget {
   }
 
   void _addCommentDialog(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -98,7 +97,7 @@ class TaskDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: const Text('Add Comment'),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             maxLines: 3,
             decoration:
                 const InputDecoration(hintText: 'Write your comment here'),
@@ -110,7 +109,7 @@ class TaskDetailScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                final content = _controller.text;
+                final content = controller.text;
                 if (content.isNotEmpty) {
                   // Call the API to add a comment
                   context.read<TaskCubit>().addComment(task.id, content, token);

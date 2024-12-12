@@ -8,8 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class MeetingDetailScreen extends StatelessWidget {
   final Meeting meeting;
 
-  const MeetingDetailScreen({Key? key, required this.meeting})
-      : super(key: key);
+  const MeetingDetailScreen({super.key, required this.meeting});
 
   Future<void> _joinMeeting() async {
     try {
@@ -31,7 +30,7 @@ class MeetingDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meeting Details'),
+        title: const Text('Meeting Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,33 +39,33 @@ class MeetingDetailScreen extends StatelessWidget {
           children: [
             Text(
               meeting.summary,
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19),
+              style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 19),
             ),
-            SizedBox(height: 8),
-            Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
             Text(meeting.description),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
                 'Start Time: ${DateFormat('dd-MM-yy HH:mm').format(meeting.startTime)}'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
                 'End Time: ${DateFormat('dd-MM-yy HH:mm').format(meeting.endTime)}'),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Center(
                   child: ElevatedButton(
                     onPressed: _joinMeeting,
-                    child: Text('Join Meeting'),
+                    child: const Text('Join Meeting'),
                   ),
                 ),
                 Center(
                   child: ElevatedButton(
                     onPressed: _shareMeetingLink,
-                    child: Text('Share'),
+                    child: const Text('Share'),
                   ),
                 ),
               ],

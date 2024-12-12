@@ -9,8 +9,7 @@ import 'package:intl/intl.dart';
 class EventDetailScreen extends StatefulWidget {
   final Event event;
   final String token;
-  const EventDetailScreen({Key? key, required this.event, required this.token})
-      : super(key: key);
+  const EventDetailScreen({super.key, required this.event, required this.token});
 
   @override
   _EventDetailScreenState createState() => _EventDetailScreenState();

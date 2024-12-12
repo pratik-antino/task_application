@@ -49,132 +49,136 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _title,
-                decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _title = value,
-              ),
-              TextFormField(
-                initialValue: _description,
-                decoration: const InputDecoration(labelText: 'Description'),
-                onSaved: (value) => _description = value,
-              ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  initialValue: _title,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => _title = value,
+                ),
+                TextFormField(
+                  initialValue: _description,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  onSaved: (value) => _description = value,
+                ),
 
-              BlocBuilder<UserCubit, UserState>(
-                builder: (context, state) {
-                  if (state is UserLoaded) {
-                    return DropdownButtonFormField<String>(
-                      value: _assignedTo,
-                      decoration: const InputDecoration(labelText: 'Assign To'),
-                      items: state.users.map((User user) {
-                        return DropdownMenuItem<String>(
-                          value: user.id,
-                          child: Text(user.name),
-                        );
-                      }).toList(),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please assign the task to a user';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) => setState(() => _assignedTo = value),
+                BlocBuilder<UserCubit, UserState>(
+                  builder: (context, state) {
+                    if (state is UserLoaded) {
+                      return DropdownButtonFormField<String>(
+                        value: _assignedTo,
+                        decoration:
+                            const InputDecoration(labelText: 'Assign To'),
+                        items: state.users.map((User user) {
+                          return DropdownMenuItem<String>(
+                            value: user.id,
+                            child: Text(user.name),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please assign the task to a user';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) =>
+                            setState(() => _assignedTo = value),
+                      );
+                    } else if (state is UserLoading) {
+                      return const Center(
+                          child: SizedBox(child: CircularProgressIndicator()));
+                    } else if (state is UserError) {
+                      return Text('Error: ${state.message}');
+                    }
+                    return Container();
+                  },
+                ),
+                DropdownButtonFormField<String>(
+                  value: _priority,
+                  decoration: const InputDecoration(labelText: 'Priority'),
+                  items: ['High', 'Medium', 'Low'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
                     );
-                  } else if (state is UserLoading) {
-                    return const Center(
-                        child: SizedBox(child: CircularProgressIndicator()));
-                  } else if (state is UserError) {
-                    return Text('Error: ${state.message}');
-                  }
-                  return Container();
-                },
-              ),
-              DropdownButtonFormField<String>(
-                value: _priority,
-                decoration: const InputDecoration(labelText: 'Priority'),
-                items: ['High', 'Medium', 'Low'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) => setState(() => _priority = value),
-              ),
-              // CheckboxListTile(
-              //   title: const Text('Completed'),
-              //   value: _status == 'Done',
-              //   onChanged: (bool? value) {
-              //     setState(() {
-              //       _status = value! ? 'Done' : 'To Do';
-              //     });
-              //   },
-              // ),
-              DropdownButtonFormField<String>(
-                value: _status,
-                decoration: const InputDecoration(labelText: 'Status'),
-                items: ['To Do', 'In Progress', 'Done'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) => setState(() => _status = value!),
-              ),
-              SizedBox(
-                height: 15,
-              ),
+                  }).toList(),
+                  onChanged: (value) => setState(() => _priority = value),
+                ),
+                // CheckboxListTile(
+                //   title: const Text('Completed'),
+                //   value: _status == 'Done',
+                //   onChanged: (bool? value) {
+                //     setState(() {
+                //       _status = value! ? 'Done' : 'To Do';
+                //     });
+                //   },
+                // ),
+                DropdownButtonFormField<String>(
+                  value: _status,
+                  decoration: const InputDecoration(labelText: 'Status'),
+                  items: ['To Do', 'In Progress', 'Done'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) => setState(() => _status = value!),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
 
-              ListTile(
-                title: const Text('Select Due Date'),
-                subtitle: Text(DateFormat('dd-MM-yy').format(_dueDate!)),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: () async {
-                  final pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: _dueDate?? DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
-                  if (pickedDate != null) {
-                    setState(() => _dueDate = pickedDate);
-                  }
-                },
-              ),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     final DateTime? picked = await showDatePicker(
-              //       context: context,
-              //       initialDate: _dueDate ?? DateTime.now(),
-              //       firstDate: DateTime(2000),
-              //       lastDate: DateTime(2101),
-              //     );
-              //     if (picked != null && picked != _dueDate) {
-              //       setState(() {
-              //         _dueDate = picked;
-              //       });
-              //     }
-              //   },
-              //   child: Text(
-              //       'Select Due Date: ${_dueDate?.toIso8601String() ?? ''}'),
-              // ),
-              const SizedBox(
-                height: 60,
-              ),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Update Task'),
-              ),
-            ],
+                ListTile(
+                  title: const Text('Select Due Date'),
+                  subtitle: Text(DateFormat('dd-MM-yy').format(_dueDate!)),
+                  trailing: const Icon(Icons.calendar_today),
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _dueDate ?? DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                    );
+                    if (pickedDate != null) {
+                      setState(() => _dueDate = pickedDate);
+                    }
+                  },
+                ),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     final DateTime? picked = await showDatePicker(
+                //       context: context,
+                //       initialDate: _dueDate ?? DateTime.now(),
+                //       firstDate: DateTime(2000),
+                //       lastDate: DateTime(2101),
+                //     );
+                //     if (picked != null && picked != _dueDate) {
+                //       setState(() {
+                //         _dueDate = picked;
+                //       });
+                //     }
+                //   },
+                //   child: Text(
+                //       'Select Due Date: ${_dueDate?.toIso8601String() ?? ''}'),
+                // ),
+                const SizedBox(
+                  height: 60,
+                ),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: const Text('Update Task'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -192,12 +196,14 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           assignedTo: _assignedTo!,
           priority: _priority,
           status: _status,
-          dueDate:DateTime.parse(_dueDate?.toIso8601String()??DateTime.now().toString()),
+          dueDate: DateTime.parse(
+              _dueDate?.toIso8601String() ?? DateTime.now().toString()),
           isCompleted: _status == 'Done',
         );
         context.read<TaskCubit>().updateTask(updatedTask, authState.token);
         Navigator.of(context).pop();
+        Navigator.of(context).pop();
       }
-    };
+    }
   }
 }

@@ -96,7 +96,6 @@ class GoogleMeetService {
 
   String generateMeetingLink() {
     // This is a simplified version. In a real-world scenario, you'd generate a unique link
-    return 'https://meet.google.com/' +
-        DateTime.now().millisecondsSinceEpoch.toString();
+    return 'https://meet.google.com/${DateTime.now().millisecondsSinceEpoch}';
   }
 }

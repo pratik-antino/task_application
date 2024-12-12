@@ -11,9 +11,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _logout() {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => LoginScreen()));
+    void logout() async {
+      await context.read<AuthCubit>().logout();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginScreen()));
     }
 
     return Scaffold(
@@ -23,10 +24,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              context.read<AuthCubit>().logout();
-              _logout();
-            },
+            onPressed: logout,
           ),
         ],
       ),
@@ -39,12 +37,12 @@ class HomeScreen extends StatelessWidget {
                 .push(MaterialPageRoute(builder: (_) => TaskListScreen()));
           }),
           _buildGridItem(context, 'Event Scheduling', Icons.event, () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => CalendarScreen()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CalendarScreen()));
           }),
           _buildGridItem(context, 'Meeting Scheduling', Icons.event, () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => GoogleCalendarScreen()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => GoogleCalendarScreen()));
           }),
         ],
       ),

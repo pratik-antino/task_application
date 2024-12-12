@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_application/fcm_service.dart';
 import 'package:task_application/modules/home/screen/home_screen.dart';
+import '../../../core/config/toast_util.dart';
 import '../cubits/auth_cubit.dart';
 import 'signup_screen.dart';
 
@@ -28,6 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    _handleNavigation();
+  }
+
+  void _handleNavigation() async {
+   await context.read<AuthCubit>().checkAuthStatus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,21 +46,19 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) async {
           if (state is AuthAuthenticated) {
-            // After successful login, retrieve FCM token
             String? fcmToken = await _fcmService.getFCMToken();
             if (fcmToken != null) {
-              // Send token to backend
-              log('fcm token retrived------------------------------${fcmToken}');
+              log('fcm token retrived------------------------------$fcmToken');
               _fcmService.sendTokenToBackend(fcmToken, state.token);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => const HomeScreen(),
+                ),
+              );
             }
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => HomeScreen(),
-              ),
-            );
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+            ToastUtil.showAPIErrorToast(
+              message: state.message,
             );
           }
         },
@@ -97,14 +104,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       else
                         ElevatedButton(
                           onPressed: _submit,
-                          child: Text('Login'),
+                          child: const Text('Login'),
                         ),
                       TextButton(
                         child: const Text('Don\'t have an account? Sign up'),
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (ctx) => SignupScreen(),
+                              builder: (ctx) => const SignupScreen(),
                             ),
                           );
                         },

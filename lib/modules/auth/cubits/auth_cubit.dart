@@ -1,26 +1,29 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:task_application/core/extensions/common_extension.dart';
+import 'package:task_application/models/user.dart';
+
+import 'package:task_application/modules/auth/auth_repo/auth_repo.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
+  final AuthRepo _authRepo = AuthRepo();
   AuthCubit() : super(AuthInitial()) {
     checkAuthStatus();
   }
-
-  final String baseUrl = 'https://d638-121-243-82-214.ngrok-free.app/api'; // Replace with your actual backend URL
-
-  // Check if the user is authenticated
-  Future<void> checkAuthStatus() async {
+  Future<bool> checkAuthStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final userId = prefs.getString('userId');
     if (token != null && userId != null) {
       emit(AuthAuthenticated(token: token, userId: userId));
+      return true;
     } else {
       emit(AuthUnauthenticated());
+      return false;
     }
   }
 
@@ -28,27 +31,20 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/users/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'email': email, 'password': password}),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final token = responseData['token'];
-        final userId = responseData['user']['id'];
-
+      final response =
+          await _authRepo.getUserSignedIn(email: email, password: password);
+      if (response["user"] != null && response['token'] != null) {
+        final user = User.fromJson(response["user"]);
+        final token = response["token"];
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
-        await prefs.setString('userId', userId);
-
-        emit(AuthAuthenticated(token: token, userId: userId));
-      } else {
-        emit(AuthError('Invalid email or password'));
+        await prefs.setString('userId', user.id);
+        emit(AuthAuthenticated(token: token, userId: user.id));
       }
-    } catch (error) {
-      emit(AuthError('An error occurred. Please try again.'),);
+    } catch (e) {
+      emit(
+        AuthError(e.getErrorMessage ?? 'error'),
+      );
     }
   }
 
@@ -56,23 +52,23 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signup(String name, String email, String password) async {
     emit(AuthLoading());
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/users/signup'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'name': name, 'email': email, 'password': password}),
-      );
+      final response = await _authRepo.getUserSignedUp(
+          email: email, password: password, name: name);
 
-      if (response.statusCode == 201) {
-        final responseData = json.decode(response.body);
-        final token = responseData['token'];
-        final userId = responseData['user']['id'];
-
-        emit(AuthAuthenticated(token: token, userId: userId));
+      if (response['token'] != null && response['user'] != null) {
+        final user = User.fromJson(response["user"]);
+        final token = response["token"];
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setString('userId', user.id);
+        emit(AuthAuthenticated(token: token, userId: user.id));
       } else {
         emit(AuthError('Failed to create account. Please try again.'));
       }
-    } catch (error) {
-      emit(AuthError('An error occurred. Please try again.'));
+    } catch (e) {
+      emit(
+        AuthError(e.getErrorMessage ?? 'error'),
+      );
     }
   }
 

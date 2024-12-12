@@ -37,11 +37,11 @@ class _SignupScreenState extends State<SignupScreen> {
             if (fcmToken != null) {
               // Send token to backend
               
-              log('fcm token retrived------------------------------${fcmToken}');
+              log('fcm token retrived------------------------------$fcmToken');
               _fcmService.sendTokenToBackend(fcmToken, state.userId);
             }
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (ctx) => HomeScreen()),
+              MaterialPageRoute(builder: (ctx) => const HomeScreen()),
             );
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -94,7 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   else
                     ElevatedButton(
                       onPressed: _submit,
-                      child: Text('Sign Up'),
+                      child: const Text('Sign Up'),
                     ),
                   TextButton(
                     child: const Text('Already have an account? Login'),

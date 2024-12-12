@@ -8,7 +8,7 @@ import '../model/task.dart';
 import '../../auth/screens/login_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
-  TaskListScreen({super.key});
+  const TaskListScreen({super.key});
 
   @override
   State<TaskListScreen> createState() => _TaskListScreenState();
@@ -45,9 +45,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 } else if (taskState is TaskLoaded) {
                   return _buildTaskList(taskState.tasks);
                 } else if (taskState is TaskError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error loading task')),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   const SnackBar(content: Text('Error loading task')),
+                  // );
                   return Container();
                 }
                 return const Center(child: Text('Unknown state'));
@@ -56,7 +56,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
                 await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddTaskScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const AddTaskScreen()),
                 );
                 context.read<TaskCubit>().fetchTasks(authState.token);
               },
@@ -64,7 +65,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             ),
           );
         } else {
-          return LoginScreen();
+          return const LoginScreen();
         }
       },
     );

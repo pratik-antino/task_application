@@ -1,5 +1,4 @@
 part of 'auth_cubit.dart';
-
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
@@ -13,7 +12,6 @@ class AuthAuthenticated extends AuthState {
 
   AuthAuthenticated({required this.token, required this.userId});
 }
-
 class AuthError extends AuthState {
   final String message;
 

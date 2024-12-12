@@ -140,7 +140,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _addEvent(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => AddEventScreen()),
+      MaterialPageRoute(builder: (context) => const AddEventScreen()),
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FCMService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -50,8 +51,12 @@ class FCMService {
 
   // Retrieve FCM token
   Future<String?> getFCMToken() async {
+    final prefs = await SharedPreferences.getInstance();
     try {
       String? token = await _firebaseMessaging.getToken();
+      if (token != null) {
+        await prefs.setString('fcmtoken', token);
+      }
       print('FCM Token: $token');
       return token;
     } catch (e) {
@@ -64,7 +69,7 @@ class FCMService {
   Future<void> sendTokenToBackend(String token, String usertoken) async {
     // Replace with your backend API endpoint
     const String backendUrl =
-        'https://d638-121-243-82-214.ngrok-free.app/api/tokens/save-token';
+        'https://7e8e-121-243-82-214.ngrok-free.app/api/tokens/save-token';
     try {
       final response = await http.post(
         Uri.parse(backendUrl),

@@ -9,6 +9,8 @@ import 'meeting_detail_screen.dart';
 import 'package:intl/intl.dart';
 
 class GoogleCalendarScreen extends StatefulWidget {
+  const GoogleCalendarScreen({super.key});
+
   @override
   _GoogleCalendarScreenState createState() => _GoogleCalendarScreenState();
 }
@@ -56,7 +58,7 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
         auth.AccessToken(
           'Bearer',
           accessToken,
-          DateTime.now().toUtc().add(Duration(hours: 1)),
+          DateTime.now().toUtc().add(const Duration(hours: 1)),
         ),
         null,
         [api.CalendarApi.calendarScope],
@@ -76,8 +78,8 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
       final events = await _calendarApi!.events.list(
         'primary',
         timeMin: DateTime.now().toUtc(),
-        singleEvents: true,
-        orderBy: 'startTime',
+        // singleEvents: true,
+        orderBy: 'updated',
       );
 
       setState(() {
@@ -90,6 +92,20 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
     } catch (e) {
       print('Error fetching meetings: ${e.toString()}');
     }
+  }
+
+  List<Meeting> _filteredMeetings = [];
+
+  void _filterMeetings() {
+    final seenSummaries = <String>{};
+    _filteredMeetings = _meetings.where((meeting) {
+      if (seenSummaries.contains(meeting.summary)) {
+        return false;
+      } else {
+        seenSummaries.add(meeting.summary);
+        return true;
+      }
+    }).toList();
   }
 
   Future<void> _signIn() async {
@@ -128,12 +144,12 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Google Meet Scheduler')),
+      appBar: AppBar(title: const Text('Google Meet Scheduler')),
       body: _currentUser == null
           ? Center(
               child: ElevatedButton(
                 onPressed: _signIn,
-                child: Text('Sign in with Google'),
+                child: const Text('Sign in with Google'),
               ),
             )
           : Column(
@@ -175,11 +191,11 @@ class _GoogleCalendarScreenState extends State<GoogleCalendarScreen> {
                 ),
                 ElevatedButton(
                   onPressed: _navigateToScheduleMeeting,
-                  child: Text('Schedule New Meeting'),
+                  child: const Text('Schedule New Meeting'),
                 ),
                 ElevatedButton(
                   onPressed: _signOut,
-                  child: Text('Sign out'),
+                  child: const Text('Sign out'),
                 ),
               ],
             ),

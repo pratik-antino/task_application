@@ -55,7 +55,7 @@ Future<void> main() async {
   // Initialize foreground notification handling
   initializeForegroundNotifications();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 /// Initialize foreground notifications
