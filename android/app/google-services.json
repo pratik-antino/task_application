@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "468180785903",
+    "project_id": "aaplink-121e0",
+    "storage_bucket": "aaplink-121e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468180785903:android:8ec4c7fcf84dc73d15591a",
+        "android_client_info": {
+          "package_name": "com.taskapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468180785903-2jldqv3335v9s24b36523fpmaloini2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taskapp",
+            "certificate_hash": "e13ac6c6f0e83ad3ce387711c99c4891a310c06d"
+          }
+        },
+        {
+          "client_id": "468180785903-r160bac2tivagn0d35klrc5bomsghabp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi4y36QM_1T-s6HysIqrZqy7wfwkfhOKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468180785903-r160bac2tivagn0d35klrc5bomsghabp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "468180785903-jm45i2ikqipiqrlebmoal8ivm1g8t6vf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.taskapplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

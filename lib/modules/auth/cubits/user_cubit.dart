@@ -7,7 +7,7 @@ import 'user_state.dart';
 class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserInitial());
 
-  final String baseUrl = 'http://10.0.2.2:5000/api'; // Replace with your actual backend URL
+  final String baseUrl = 'https://d638-121-243-82-214.ngrok-free.app/api'; // Replace with your actual backend URL
 
   Future<void> fetchUsers(String token) async {
     emit(UserLoading());
@@ -25,13 +25,13 @@ class UserCubit extends Cubit<UserState> {
         final List<User> loadedUsers = [];
         final extractedData = json.decode(response.body) as List<dynamic>;
         
-        extractedData.forEach((userData) {
+        for (var userData in extractedData) {
           loadedUsers.add(User.fromJson(userData));
-        });
+        }
 
         emit(UserLoaded(loadedUsers));
       } else {
-        emit(UserError('Failed to load users'));
+        emit(const UserError('Failed to load users'));
       }
     } catch (error) {
       emit(UserError(error.toString()));

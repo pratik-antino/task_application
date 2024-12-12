@@ -10,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
     checkAuthStatus();
   }
 
-  final String baseUrl = 'http://your-backend-url/api'; // Replace with your actual backend URL
+  final String baseUrl = 'https://d638-121-243-82-214.ngrok-free.app/api'; // Replace with your actual backend URL
 
   // Check if the user is authenticated
   Future<void> checkAuthStatus() async {
