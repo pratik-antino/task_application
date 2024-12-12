@@ -27,7 +27,7 @@ router.get('/', authenticateUser, async (req, res) => {
 });
 
 // Create a new event
-router.post('/', authenticateUser, async (req, res) => {
+router.post('/add-event/', authenticateUser, async (req, res) => {
   const { title, description, startTime, endTime, participants, sharedWith } = req.body;
 
   if (!title || !startTime || !endTime) {
@@ -73,14 +73,14 @@ console.log('FCM Tokens:', fcmTokens); // Ch
        await  sendNotification(fcmTokens, reminderTitle, reminderBody);
        });
      }
-    res.status(201).json(newEvent);
+    res.status(201).json({message: 'event added successfully'});
   } catch (err) {
     res.status(400).json({ message: `Error  creating event: ${err.message}` });
   }
 });
 
 // Update an event
-router.patch('/:id', async (req, res) => {
+router.patch('/update-event/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (req.body.title) {
@@ -103,7 +103,7 @@ router.patch('/:id', async (req, res) => {
 });
 
 // Delete an event
-router.delete('/:id', async (req, res) => {
+router.delete('/delete-event/:id', async (req, res) => {
   try {
     await Event.findByIdAndDelete(req.params.id);
     res.json({ message: 'Event deleted' });

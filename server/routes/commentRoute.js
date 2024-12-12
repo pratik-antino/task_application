@@ -6,7 +6,7 @@ import { authenticateUser } from '../middleware/auth.js';
 const router = express.Router();
 
 // Add a comment to a task
-router.post('/:taskId',authenticateUser, async (req, res) => {
+router.post('/post-comment/:taskId',authenticateUser, async (req, res) => {
   try {
     const { taskId } = req.params;
     const { content } = req.body;

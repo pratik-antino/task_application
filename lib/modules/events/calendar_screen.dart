@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:task_application/core/config/toast_util.dart';
 import 'package:task_application/modules/events/event.dart';
 import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/modules/events/add_event_screen.dart';
@@ -23,10 +24,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    final authState = context.read<AuthCubit>().state;
-    if (authState is AuthAuthenticated) {
-      context.read<EventCubit>().fetchEvents(authState.token);
-    }
+    context.read<EventCubit>().fetchEvents();
   }
 
   @override
@@ -90,9 +88,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ],
             );
+          } else if (state is EventError) {
+            ToastUtil.showAPIErrorToast(message: state.message);
           } else {
-            return const Center(child: Text('An error occurred'));
+            return Container();
           }
+          return Container();
         },
       ),
       floatingActionButton: FloatingActionButton(

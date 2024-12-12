@@ -24,11 +24,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 
   void _addComment() {
-    final token = widget.token; // Replace with actual token
     final content = _commentController.text.trim();
     if (content.isNotEmpty) {
-      context.read<EventCubit>().addComment(widget.event.id, content, token);
-      context.read<EventCubit>().fetchEvents(token);
+      context.read<EventCubit>().addComment(widget.event.id, content);
+      context.read<EventCubit>().fetchEvents();
 
       _commentController.clear();
       Navigator.of(context).pop();

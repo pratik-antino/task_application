@@ -8,7 +8,6 @@ class EventLoading extends EventState {}
 
 class EventLoaded extends EventState {
   final List<Event> events;
-
   EventLoaded(this.events);
 }
 

@@ -48,11 +48,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
           sharedWith: _participants,
         );
 
-        context.read<EventCubit>().addEvent(event, authState.token);
+        context.read<EventCubit>().addEvent(event);
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Authentication error. Please log in again.')),
+          const SnackBar(
+              content: Text('Authentication error. Please log in again.')),
         );
       }
     }
@@ -60,7 +61,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Event'),
@@ -73,7 +73,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) => value == null || value.isEmpty ? 'Please enter a title' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter a title'
+                    : null,
                 onSaved: (value) => _title = value!,
               ),
               TextFormField(
@@ -93,7 +95,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDateTime(context, isStartTime: false),
               ),
-            
               BlocBuilder<UserCubit, UserState>(
                 builder: (context, state) {
                   if (state is UserLoading) {
@@ -109,7 +110,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             setState(() {
                               _selectAll = value!;
                               if (_selectAll) {
-                                _participants = state.users.map((user) => user.id).toList();
+                                _participants =
+                                    state.users.map((user) => user.id).toList();
                               } else {
                                 _participants.clear();
                               }
@@ -129,7 +131,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                       _participants.add(user.id);
                                     } else {
                                       _participants.remove(user.id);
-                                      _selectAll = false; // Uncheck "Select All" if deselected
+                                      _selectAll =
+                                          false; // Uncheck "Select All" if deselected
                                     }
                                   });
                                 },
@@ -157,7 +160,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  Future<void> _selectDateTime(BuildContext context, {required bool isStartTime}) async {
+  Future<void> _selectDateTime(BuildContext context,
+      {required bool isStartTime}) async {
     final currentDate = isStartTime ? _startTime : _endTime;
 
     final selectedDate = await showDatePicker(

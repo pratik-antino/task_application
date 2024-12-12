@@ -43,7 +43,7 @@ class _ScheduleEventScreenState extends State<ScheduleEventScreen> {
       );
       final authState = context.read<AuthCubit>().state;
       if (authState is AuthAuthenticated) {
-        context.read<EventCubit>().addEvent(event, authState.token);
+        context.read<EventCubit>().addEvent(event);
         if (_isGoogleMeetEnabled) {
           context.read<MeetingCubit>().scheduleMeeting(event.id, _participants, authState.token);
         }

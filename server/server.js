@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import meetingRoutes from './routes/meetingRoutes.js';
-import eventRoutes from './routes/events.js';
+import eventRoutes from './routes/eventRoute.js';
 import tokenRoutes from './routes/tokenRoutes.js';
 import commentRoutes from './routes/commentRoute.js'
 import eventCommentRoutes from './routes/eventCommentRoute.js'

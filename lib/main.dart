@@ -8,7 +8,6 @@ import 'package:task_application/modules/auth/cubits/auth_cubit.dart';
 import 'package:task_application/cubits/calendar_cubit.dart';
 import 'package:task_application/modules/events/cubits/event_cubit.dart';
 import 'package:task_application/modules/events/cubits/meeting_cubit.dart';
-import 'package:task_application/modules/notification/cubits/notification_cubit.dart';
 import 'package:task_application/modules/task/cubits/task_cubit.dart';
 import 'package:task_application/modules/auth/cubits/user_cubit.dart';
 import 'package:task_application/modules/auth/screens/login_screen.dart';
@@ -40,11 +39,12 @@ Future<void> main() async {
   );
   // Initialize local notifications
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   // Request notification permissions
-   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,
@@ -59,30 +59,31 @@ Future<void> main() async {
 }
 
 /// Initialize foreground notifications
- void initializeForegroundNotifications() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+void initializeForegroundNotifications() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
 
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title ?? 'No Title',
-          notification.body ?? 'No Body',
-     const      NotificationDetails(
-            android: AndroidNotificationDetails(
-              'high_importance_channel', // Channel ID
-              'High Importance Notifications', // Channel Name
-              channelDescription: 'This channel is used for important notifications.',
-              importance: Importance.high,
-              priority: Priority.high,
-              icon: '@mipmap/ic_launcher', // Ensure a small icon is set
-            ),
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title ?? 'No Title',
+        notification.body ?? 'No Body',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'high_importance_channel', // Channel ID
+            'High Importance Notifications', // Channel Name
+            channelDescription:
+                'This channel is used for important notifications.',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher', // Ensure a small icon is set
           ),
-        );
-      }
-    });
-  
+        ),
+      );
+    }
+  });
+
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('Notification opened: ${message.notification?.title}');
     // Handle navigation or other actions when a notification is opened
@@ -103,8 +104,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<CalendarCubit>(create: (context) => CalendarCubit()),
         BlocProvider<MeetingCubit>(create: (context) => MeetingCubit()),
         BlocProvider<UserCubit>(create: (context) => UserCubit()),
-        BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()),
-        BlocProvider<AudioCommandCubit>(create: (context) => AudioCommandCubit()),
+        // BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()),
+        BlocProvider<AudioCommandCubit>(
+            create: (context) => AudioCommandCubit()),
       ],
       child: MaterialApp(
         title: 'Task Management App',
@@ -113,7 +115,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const  LoginScreen(),
+        home: const LoginScreen(),
       ),
     );
   }

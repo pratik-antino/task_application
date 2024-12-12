@@ -3,7 +3,6 @@ import 'package:task_application/core/constants/api_route.dart';
 
 class AuthRepo {
   static final dioUtils = DioUtil();
-
   // to sign the user
   Future<dynamic> getUserSignedIn({
     required String email,

@@ -8,7 +8,7 @@ import admin from 'firebase-admin';
 const router = express.Router();
 
 // Create a new task
-router.post('/', authenticateUser, async (req, res) => {
+router.post('/add-task', authenticateUser, async (req, res) => {
   try {
     const { title, description, assignedTo, priority, status, dueDate } = req.body;
 
@@ -97,7 +97,7 @@ router.get('/', authenticateUser, async (req, res) => {
 });
 
 // ete a task
-router.delete('/:id', async (req, res) => {
+router.delete('/delete-task/:id', async (req, res) => {
   try {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
@@ -110,7 +110,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Update a task
-router.patch('/:id', async (req, res) => {
+router.patch('/edit-task/:id', async (req, res) => {
   console.log('called update')
   try {
     const task = await Task.findById(req.params.id);

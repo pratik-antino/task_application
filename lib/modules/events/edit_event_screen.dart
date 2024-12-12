@@ -54,7 +54,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
         ownerId: authState.userId,
       );
 
-      context.read<EventCubit>().updateEvent(updatedEvent, authState.token);
+      context.read<EventCubit>().updateEvent(updatedEvent);
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
