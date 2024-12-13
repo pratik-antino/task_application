@@ -13,11 +13,11 @@ class EventCubit extends Cubit<EventState> {
 
     try {
       final response = await _eventRepo.fetchEvents();
-      final List<Event> _fetchedEvents = [];
+      final List<Event> fetchedEvents = [];
       for (var event in response) {
-        _fetchedEvents.add(Event.fromJson(event));
+        fetchedEvents.add(Event.fromJson(event));
       }
-      emit(EventLoaded(_fetchedEvents));
+      emit(EventLoaded(fetchedEvents));
     } catch (error) {
       emit(EventError('An error occurred. Please try again.'));
     }

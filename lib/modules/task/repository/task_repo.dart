@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:task_application/core/api_client/api_client.dart';
 import 'package:task_application/core/constants/api_route.dart';
@@ -32,13 +31,13 @@ class TaskRepo {
   }
 
   Future<void> deleteTask(String taskId) async {
-    await _dioUtils.delete('${ApiRoute.deleteTask}/${taskId}');
+    await _dioUtils.delete('${ApiRoute.deleteTask}/$taskId');
   }
 
   Future<dynamic> addCommentOnTask(String comment, String taskId) async {
     final body = {'content': comment};
     final response = await _dioUtils
-        .post('${ApiRoute.addTaskComment}/${taskId}', body: body);
+        .post('${ApiRoute.addTaskComment}/$taskId', body: body);
     return response;
   }
 

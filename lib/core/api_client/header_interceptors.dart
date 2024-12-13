@@ -70,8 +70,8 @@ class AuthInterceptor extends QueuedInterceptor {
     if (headers != null) {
       tempHeader.addAll(headers);
     }
-    final _pref = await SharedPreferences.getInstance();
-    final accessToken = _pref.getString('token');
+    final pref = await SharedPreferences.getInstance();
+    final accessToken = pref.getString('token');
     // navigatorKey.currentState!.context.read<AuthCubit>().state.accessToken;
 
     final token = accessToken?.isNotEmpty == true ? accessToken : null;

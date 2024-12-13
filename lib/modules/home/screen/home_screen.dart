@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           _buildGridItem(context, 'Task Management', Icons.assignment, () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => TaskListScreen()));
+                .push(MaterialPageRoute(builder: (_) => const TaskListScreen()));
           }),
           _buildGridItem(context, 'Event Scheduling', Icons.event, () {
             Navigator.of(context).push(
@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
           }),
           _buildGridItem(context, 'Meeting Scheduling', Icons.event, () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => GoogleCalendarScreen()));
+                MaterialPageRoute(builder: (_) => const GoogleCalendarScreen()));
           }),
         ],
       ),

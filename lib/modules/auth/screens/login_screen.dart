@@ -29,11 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    super.initState();
     _handleNavigation();
   }
 
   void _handleNavigation() async {
-   await context.read<AuthCubit>().checkAuthStatus();
+    await context.read<AuthCubit>().checkAuthStatus();
   }
 
   @override

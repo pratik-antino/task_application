@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 
 // Define the path to your service account key file
-const serviceAccountPath = path.resolve('C:/task_application/server/serviceAccountKey.json');
+const serviceAccountPath = path.resolve('./serviceAccountKey.json');
 
 // Parse the service account key JSON file
 const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));

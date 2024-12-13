@@ -1,7 +1,5 @@
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:task_application/core/config/toast_util.dart';
 import 'package:task_application/core/extensions/common_extension.dart';
 import 'package:task_application/modules/task/repository/task_repo.dart';
